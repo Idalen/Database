@@ -12,13 +12,20 @@ CREATE TABLE parque_tematico(
 	cidade VARCHAR(30) NOT NULL, 
 	preco NUMERIC(5, 2),
 	lotacao_maxima INTEGER,
-	dom VARCHAR(50),
-	seg VARCHAR(50),
-	ter VARCHAR(50),
-	qua VARCHAR(50),
-	qui VARCHAR(50),
-	sex VARCHAR(50),
-	sab VARCHAR(50)
+	dom_inicio 	TIME,
+	dom_fim 	TIME,
+	seg_inicio 	TIME,
+	seg_fim 	TIME,
+	ter_inicio 	TIME,
+	ter_fim 	TIME,
+	qua_inicio	TIME,
+	qua_fim 	TIME,
+	qui_inicio 	TIME,
+	qui_fim 	TIME,
+	sex_inicio 	TIME,
+	sex_fim 	TIME,
+	sab_inicio 	TIME,
+	sab_fim 	TIME
 );
 
 -- Criando tabela do Restaurante
@@ -28,13 +35,20 @@ CREATE TABLE restaurante(
 	CONSTRAINT fk_parque FOREIGN KEY(parque) REFERENCES parque_tematico(documento), 
 	nome VARCHAR(255),
 	faixa_preco VARCHAR(255),
-	dom VARCHAR(255),
-	seg VARCHAR(255),
-	ter VARCHAR(255),
-	qua VARCHAR(255),
-	qui VARCHAR(255),
-	sex VARCHAR(255),
-	sab VARCHAR(255)
+	dom_inicio 	TIME,
+	dom_fim 	TIME,
+	seg_inicio 	TIME,
+	seg_fim 	TIME,
+	ter_inicio 	TIME,
+	ter_fim 	TIME,
+	qua_inicio	TIME,
+	qua_fim 	TIME,
+	qui_inicio 	TIME,
+	qui_fim 	TIME,
+	sex_inicio 	TIME,
+	sex_fim 	TIME,
+	sab_inicio 	TIME,
+	sab_fim 	TIME
 );
 
 -- Criando tabela dos tipos de cozinha de um restaurante 
