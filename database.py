@@ -1,9 +1,10 @@
 #!/usr/bin/python
+
 import psycopg2
 from config import config
 from read_sql import read_sql
 
-def connect_postgres():
+def connect():
     """ Connect to the PostgreSQL database server """
     conn = None
 

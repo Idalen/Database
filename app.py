@@ -1,7 +1,7 @@
-import connect
+import database as db
 
 print("""Bem vindo à aplicação!""")
 
-conn = connect.connect_postgres()
+conn = db.connect()
 
 print(conn)
