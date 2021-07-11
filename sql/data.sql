@@ -9,7 +9,7 @@ INSERT INTO pais
 
 INSERT INTO parque_tematico  
     VALUES(
-        12345678911, 
+        -12345678911, 
         'Argentina',
         'Parque Didi',
         'Buenos Aires',

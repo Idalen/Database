@@ -13,12 +13,12 @@ CREATE TABLE pais(
 
 -- Criando tabela do Parque Temático
 CREATE TABLE parque_tematico(
-	documento NUMERIC(11, 0) PRIMARY KEY,
+	documento NUMERIC(11, 0) PRIMARY KEY CHECK (documento>0),
 	pais VARCHAR(30) NOT NULL,
 	nome VARCHAR(30) NOT NULL,
 	cidade VARCHAR(30) NOT NULL, 
-	preco NUMERIC(5, 2),
-	lotacao_maxima INTEGER,
+	preco NUMERIC(5, 2) CHECK (preco > 0),
+	lotacao_maxima INTEGER CHECK(lotacao_maximo > 0),
 	dom_inicio 	TIME,
 	dom_fim 	TIME,
 	seg_inicio 	TIME,
@@ -34,7 +34,8 @@ CREATE TABLE parque_tematico(
 	sab_inicio 	TIME,
 	sab_fim 	TIME,
 	CONSTRAINT fk_pais FOREIGN KEY(pais) REFERENCES pais(nome_pais) ON DELETE SET NULL,
-	CONSTRAINT valid_dom CHECK (dom_inicio < dom_fim),
+	-- Check de horario
+	CONSTRAINT valid_dom CHECK (dom_inicio < dom_fim), 
 	CONSTRAINT valid_seg CHECK (seg_inicio < seg_fim),
 	CONSTRAINT valid_ter CHECK (ter_inicio < ter_fim),
 	CONSTRAINT valid_qua CHECK (qua_inicio < qua_fim),
@@ -45,7 +46,7 @@ CREATE TABLE parque_tematico(
 
 -- Criando tabela do Restaurante
 CREATE TABLE restaurante(
-	documento NUMERIC(11, 0) PRIMARY KEY,
+	documento NUMERIC(11, 0) PRIMARY KEY CHECK(documento > 0),
 	parque NUMERIC(11, 0) NOT NULL,
 	CONSTRAINT fk_parque FOREIGN KEY(parque) REFERENCES parque_tematico(documento), 
 	nome VARCHAR(255),
@@ -64,6 +65,7 @@ CREATE TABLE restaurante(
 	sex_fim 	TIME,
 	sab_inicio 	TIME,
 	sab_fim 	TIME,
+	-- check de horario
 	CONSTRAINT valid_dom CHECK (dom_inicio < dom_fim),
 	CONSTRAINT valid_seg CHECK (seg_inicio < seg_fim),
 	CONSTRAINT valid_ter CHECK (ter_inicio < ter_fim),
@@ -77,7 +79,7 @@ CREATE TABLE restaurante(
 CREATE TABLE cozinha(
 	restaurante NUMERIC(11, 0),
 	CONSTRAINT fk_rest FOREIGN KEY(restaurante) REFERENCES restaurante(documento), 
-	tipo_cozinha VARCHAR(255),
+	tipo_cozinha VARCHAR(30),
 	CONSTRAINT pk_cozinha PRIMARY KEY(restaurante, tipo_cozinha)
 );
 
@@ -86,18 +88,18 @@ CREATE TABLE hotel(
 	documento NUMERIC(11, 0) PRIMARY KEY,
 	parque NUMERIC(11, 0) NOT NULL,
 	CONSTRAINT fk_parque FOREIGN KEY(parque) REFERENCES parque_tematico(documento),
-	nome VARCHAR(255),
-	total_quartos INTEGER,
-	total_vagas INTEGER,
-	quartos_livres INTEGER,
-	vagas_livres INTEGER
+	nome VARCHAR(30),
+	total_quartos INTEGER CHECK (total_quartos > 0), -- total de quartos nao pode ser negativo
+	total_vagas INTEGER CHECK (total_quartos <= total_vagas), --sempre ha, no minimo, uma vaga, ocupada ou não, para cada quarto
+	quartos_livres INTEGER, -- ATRIBUTO DERIVADO
+	vagas_livres INTEGER -- ATRIBUTO DERIVADO
 );
 
 -- Criando tabela dos serviços do hotel
 CREATE TABLE servico_hotel(
 	hotel NUMERIC(11, 0),
 	CONSTRAINT fk_hotel FOREIGN KEY(hotel) REFERENCES hotel(documento),
-	servico VARCHAR(255),
+	servico VARCHAR(30),
 	CONSTRAINT pk_servico_hotel PRIMARY KEY(hotel, servico)
 );
 
@@ -105,17 +107,17 @@ CREATE TABLE servico_hotel(
 CREATE TABLE quarto(
 	hotel NUMERIC(11, 0),
 	CONSTRAINT fk_hotel FOREIGN KEY(hotel) REFERENCES hotel(documento),
-	numero INTEGER,
+	numero INTEGER CHECK(numero > 0), --O numero do quarto não pode ser 0 ou negativo 
 	CONSTRAINT pk_quarto PRIMARY KEY(hotel, numero)
 );
 
 -- Criando tabela do Turista
 CREATE TABLE turista(
-	passaporte NUMERIC(11, 0) PRIMARY KEY,
-	nome VARCHAR(255) NOT NULL,
-	data_nascimento VARCHAR(255) NOT NULL,
-	telefone VARCHAR(255),
-	nacionalidade VARCHAR(255), -- não sei se isso deveria referenciar pais e se talvez isso tbm precise estar junto da PK. (DUVIDA)
+	passaporte NUMERIC(11, 0) PRIMARY KEY CHECK(passaporte > 0),
+	nome VARCHAR(30) NOT NULL,
+	data_nascimento DATE NOT NULL, -- tipo DATE
+	telefone VARCHAR(20),
+	nacionalidade VARCHAR(255), --!!! não sei se isso deveria referenciar pais e se talvez isso tbm precise estar junto da PK. (DUVIDA)
 	hotel NUMERIC(11, 0),
 	quarto INTEGER,
 	CONSTRAINT fk_quarto FOREIGN KEY(hotel, quarto) REFERENCES quarto(hotel, numero)
@@ -125,7 +127,7 @@ CREATE TABLE turista(
 CREATE TABLE restricoes_alimentares(
 	turista NUMERIC(11, 0),
 	CONSTRAINT fk_turista FOREIGN KEY(turista) REFERENCES turista(passaporte),
-	restricao VARCHAR(255),
+	restricao VARCHAR(30),
 	CONSTRAINT pk_restricoes_alimentares PRIMARY KEY(turista, restricao)
 );
 
@@ -134,7 +136,7 @@ CREATE TABLE restricoes_alimentares(
 CREATE TABLE necessidades_especiais(
 	turista NUMERIC(11, 0),
 	CONSTRAINT fk_turista FOREIGN KEY(turista) REFERENCES turista(passaporte),
-	necessidade VARCHAR(255),
+	necessidade VARCHAR(30),
 	CONSTRAINT pk_necessidades_especiais PRIMARY KEY(turista, necessidade)
 );
 
@@ -145,7 +147,7 @@ CREATE TABLE avaliacao(
 	CONSTRAINT fk_turista FOREIGN KEY(turista) REFERENCES turista(passaporte),
 	restaurante NUMERIC(11, 0),
 	CONSTRAINT fk_restaurante FOREIGN KEY(restaurante) REFERENCES restaurante(documento),
-	nota NUMERIC(2, 1) NOT NULL,
+	nota NUMERIC(2, 1) NOT NULL CHECK (nota>0),
 	CONSTRAINT pk_avaliacao PRIMARY KEY(turista, restaurante)
 );
 
@@ -153,8 +155,9 @@ CREATE TABLE avaliacao(
 CREATE TABLE hospedagem(
 	turista NUMERIC(11, 0),
 	CONSTRAINT fk_turista FOREIGN KEY(turista) REFERENCES turista(passaporte),
-	checkin VARCHAR(255),
-	checkout VARCHAR(255),
+	checkin TIMESTAMP,
+	checkout TIMESTAMP,
+	CONSTRAINT valid_hospedagem_timestamp CHECK (checkin < checkout)
 	CONSTRAINT pk_hospedagem PRIMARY KEY(turista, checkin, checkout)
 );
 
@@ -162,8 +165,8 @@ CREATE TABLE hospedagem(
 CREATE TABLE grupo_turistas(
 	admin NUMERIC(11, 0),
 	CONSTRAINT fk_admin FOREIGN KEY(admin) REFERENCES turista(passaporte),
-	nome_grupo VARCHAR(255),
-	quantidade INTEGER,
+	nome_grupo VARCHAR(30),
+	quantidade INTEGER CHECK (quantidade > 0) --- !Atributo derivado
 	CONSTRAINT pk_grupo_turistas PRIMARY KEY(admin, nome_grupo)
 );
 
@@ -172,7 +175,7 @@ CREATE TABLE participacao(
 	turista NUMERIC(11, 0),
 	CONSTRAINT fk_turista FOREIGN KEY(turista) REFERENCES turista(passaporte),
 	admin_grupo NUMERIC(11, 0),
-	nome_grupo VARCHAR(255),
+	nome_grupo VARCHAR(30),
 	CONSTRAINT fk_grupo FOREIGN KEY(admin_grupo, nome_grupo) REFERENCES grupo_turistas(admin, nome_grupo),
 	CONSTRAINT pk_participacao PRIMARY KEY(turista, admin_grupo, nome_grupo)
 );
@@ -183,35 +186,35 @@ CREATE TABLE viagem(
 	admin_grupo NUMERIC(11, 0),
 	nome_grupo VARCHAR(255),
 	CONSTRAINT fk_grupo FOREIGN KEY(admin_grupo, nome_grupo) REFERENCES grupo_turistas(admin, nome_grupo),
-	data_partida VARCHAR(255),
-	data_chegada VARCHAR(255),
-	pais_origem VARCHAR(255) NOT NULL,
+	data_partida TIMESTAMP,
+	data_chegada TIMESTAMP,
+	pais_origem VARCHAR(30) NOT NULL,
 	CONSTRAINT fk_pais_origem FOREIGN KEY(pais_origem) REFERENCES pais(nome_pais),
-	pais_destino VARCHAR(255) NOT NULL,
+	pais_destino VARCHAR(30) NOT NULL,
 	CONSTRAINT fk_pais_destino FOREIGN KEY(pais_destino) REFERENCES pais(nome_pais), 
-	duracao INTEGER, 
+	duracao INTEGER, --Atributo derivado
 	CONSTRAINT pk_viagem PRIMARY KEY(admin_grupo, nome_grupo, data_partida, data_chegada)
 );
 
 -- Criando tabela do Passeio
 CREATE TABLE passeio(
 	id SERIAL PRIMARY KEY,
-	data VARCHAR(10) UNIQUE, 
+	data DATE UNIQUE, 
 	admin_grupo NUMERIC(11, 0), 
-	nome_grupo VARCHAR(255),
+	nome_grupo VARCHAR(30),
 	CONSTRAINT un_grupo UNIQUE (admin_grupo, nome_grupo),
 	CONSTRAINT fk_grupo FOREIGN KEY(admin_grupo, nome_grupo) REFERENCES grupo_turistas(admin, nome_grupo),
 	parque NUMERIC(11, 0) UNIQUE,
 	CONSTRAINT fk_parque FOREIGN KEY(parque) REFERENCES parque_tematico(documento),
-	nome_guia VARCHAR(255),
-	preco_guia NUMERIC(5, 2)
+	nome_guia VARCHAR(30),
+	preco_guia NUMERIC(5, 2) CHECK (preco_guia >=0 ) -- preco-guia tem que ser no minimo 0
 );
 
 -- Criando tabela dos idiomas do(a) guia
 CREATE TABLE idiomas_guia(
 	passeio INTEGER,
 	CONSTRAINT fk_passeio FOREIGN KEY(passeio) REFERENCES passeio(id),
-	idioma VARCHAR(255),
+	idioma VARCHAR(50),
 	CONSTRAINT pk_idiomas_guia PRIMARY KEY(passeio, idioma)
 );
 
@@ -219,33 +222,30 @@ CREATE TABLE idiomas_guia(
 CREATE TABLE atracao(
 	parque NUMERIC(11, 0),
 	CONSTRAINT fk_parque FOREIGN KEY(parque) REFERENCES parque_tematico(documento),
-	nome VARCHAR(255),
-	tipo VARCHAR(255),
+	nome VARCHAR(30),
+	tipo VARCHAR(30),
 	-- tem que ter disponibilidade aqui, mas n sei oq significa
-	capacidade INTEGER,
+	capacidade INTEGER CHECK (capacidade > 0), -- capacidade precisa ser positiva
 	CONSTRAINT pk_atracao PRIMARY KEY(parque, nome)
 );
 
 -- Criando tabela do Evento
 CREATE TABLE evento(
 	passeio INTEGER,
-	CONSTRAINT fk_passeio 
-		FOREIGN KEY(passeio) 
-			REFERENCES passeio(id),
+	CONSTRAINT fk_passeio FOREIGN KEY(passeio) REFERENCES passeio(id),
 	parque_atracao NUMERIC(11, 0),
-	nome_atracao VARCHAR(255),
+	nome_atracao VARCHAR(30),
 	CONSTRAINT fk_atracao FOREIGN KEY(parque_atracao, nome_atracao) REFERENCES atracao(parque, nome), 
-	-- ingresso NOT NULL não sei que tipo é
-	CONSTRAINT pk_evento 
-		PRIMARY KEY(passeio, parque_atracao, nome_atracao)
+	ingresso CHAR (25) NOT NULL, -- ingresso vai ser uma string com seu id
+	CONSTRAINT pk_evento PRIMARY KEY(passeio, parque_atracao, nome_atracao)
 );
 		
 -- Criando tabela das Restrições das Atrações
 CREATE TABLE restricoes_atracao(
 	parque_atracao NUMERIC(11, 0),
-	nome_atracao VARCHAR(255),
+	nome_atracao VARCHAR(30),
 	CONSTRAINT fk_atracao FOREIGN KEY(parque_atracao, nome_atracao) REFERENCES atracao(parque, nome),
-    restricao VARCHAR(255), -- ajeitar no MR
+    restricao VARCHAR(30), -- ajeitar no MR
 	CONSTRAINT pk_restricoes_atracao PRIMARY KEY(parque_atracao, nome_atracao, restricao)
 );
 
