@@ -1,3 +1,5 @@
+DROP DATABASE IF EXISTS turismo_bd;
+
 -- Criando database
 CREATE DATABASE turismo_bd;
 
@@ -13,7 +15,6 @@ CREATE TABLE pais(
 CREATE TABLE parque_tematico(
 	documento NUMERIC(11, 0) PRIMARY KEY,
 	pais VARCHAR(30) NOT NULL,
-	CONSTRAINT fk_pais FOREIGN KEY(pais) REFERENCES pais(nome_pais) ON DELETE SET NULL,
 	nome VARCHAR(30) NOT NULL,
 	cidade VARCHAR(30) NOT NULL, 
 	preco NUMERIC(5, 2),
@@ -31,7 +32,15 @@ CREATE TABLE parque_tematico(
 	sex_inicio 	TIME,
 	sex_fim 	TIME,
 	sab_inicio 	TIME,
-	sab_fim 	TIME
+	sab_fim 	TIME,
+	CONSTRAINT fk_pais FOREIGN KEY(pais) REFERENCES pais(nome_pais) ON DELETE SET NULL,
+	CONSTRAINT valid_dom CHECK (dom_inicio < dom_fim),
+	CONSTRAINT valid_seg CHECK (seg_inicio < seg_fim),
+	CONSTRAINT valid_ter CHECK (ter_inicio < ter_fim),
+	CONSTRAINT valid_qua CHECK (qua_inicio < qua_fim),
+	CONSTRAINT valid_qui CHECK (qui_inicio < qui_fim),
+	CONSTRAINT valid_sex CHECK (sex_inicio < sex_fim),
+	CONSTRAINT valid_sab CHECK (sab_inicio < sab_fim)
 );
 
 -- Criando tabela do Restaurante
@@ -54,7 +63,14 @@ CREATE TABLE restaurante(
 	sex_inicio 	TIME,
 	sex_fim 	TIME,
 	sab_inicio 	TIME,
-	sab_fim 	TIME
+	sab_fim 	TIME,
+	CONSTRAINT valid_dom CHECK (dom_inicio < dom_fim),
+	CONSTRAINT valid_seg CHECK (seg_inicio < seg_fim),
+	CONSTRAINT valid_ter CHECK (ter_inicio < ter_fim),
+	CONSTRAINT valid_qua CHECK (qua_inicio < qua_fim),
+	CONSTRAINT valid_qui CHECK (qui_inicio < qui_fim),
+	CONSTRAINT valid_sex CHECK (sex_inicio < sex_fim),
+	CONSTRAINT valid_sab CHECK (sab_inicio < sab_fim)
 );
 
 -- Criando tabela dos tipos de cozinha de um restaurante 
