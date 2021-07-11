@@ -13,7 +13,7 @@ INSERT INTO parque_tematico
     VALUES(
         12345678911, 
         'Argentina',
-        'Parque Diogo'
+        'Parque Didi'
         'Buenos Aires',
         150.0,
         700,
