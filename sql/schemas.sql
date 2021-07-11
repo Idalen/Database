@@ -1,3 +1,9 @@
+-- Criando database
+CREATE DATABASE turismo_bd;
+
+-- Conectando
+\c turismo_bd;
+
 -- Criando tabela do País
 CREATE TABLE pais(
 	nome_pais VARCHAR(30) PRIMARY KEY
@@ -7,7 +13,7 @@ CREATE TABLE pais(
 CREATE TABLE parque_tematico(
 	documento NUMERIC(11, 0) PRIMARY KEY,
 	pais VARCHAR(30) NOT NULL,
-	CONSTRAINT fk_pais FOREIGN KEY(pais) REFERENCES pais(nome_pais),
+	CONSTRAINT fk_pais FOREIGN KEY(pais) REFERENCES pais(nome_pais) ON DELETE SET NULL,
 	nome VARCHAR(30) NOT NULL,
 	cidade VARCHAR(30) NOT NULL, 
 	preco NUMERIC(5, 2),

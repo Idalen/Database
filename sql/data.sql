@@ -1,7 +1,9 @@
 -- Insercao de dados em PAIS
 
-INSERT INTO pais(nome_pais)
-    VALUES ('Argentina'),
+INSERT INTO pais
+    VALUES ('Argentina');
+
+INSERT INTO pais
     VALUES ('Angola');
 
 
@@ -10,33 +12,35 @@ INSERT INTO pais(nome_pais)
 INSERT INTO parque_tematico
     VALUES(
         12345678911, 
-        SELECT nome_pais FROM pais WHERE nome_pais='Argentina',
+        'Argentina',
         'Parque Diogo'
         'Buenos Aires',
         150.0,
         700,
-        '08:00-12:00 13:30-22:00',
-        '09:00-12:00',
-        '09:00-12:00',
-        '09:00-12:00',
-        '09:00-12:00',
-        '09:00-12:00',
-        '08:00-12:00 13:30-22:00'
-        ),
+        '08:00:00','22:00:00',
+        '09:00:00','12:00:00',
+        '09:00:00','12:00:00',
+        '09:00:00','12:00:00',
+        '09:00:00','12:00:00',
+        '09:00:00','12:00:00',
+        '08:00:00','22:00:00'
+        );
+
+INSERT INTO parque_tematico      
     VALUES(
         12345678910, 
-        SELECT nome_pais FROM pais WHERE nome_pais='Angola',
+        'Angola',
         'Parque Madu'
         'Buenos Aires',
         99.99,
         NULL,
-        '08:00-12:00 13:30-22:00',
-        '09:00-12:00',
-        '09:00-12:00',
-        '09:00-12:00',
-        '09:00-12:00',
-        '09:00-12:00',
-        '08:00-12:00 13:30-22:00'
+        '08:00:00','22:00:00',
+        '09:00:00','12:00:00',
+        '09:00:00','12:00:00',
+        '09:00:00','12:00:00',
+        '09:00:00','12:00:00',
+        '09:00:00','12:00:00',
+        '08:00:00','22:00:00'
         );
 
     
