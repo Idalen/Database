@@ -145,7 +145,7 @@ CREATE TABLE avaliacao(
 	CONSTRAINT fk_turista FOREIGN KEY(turista) REFERENCES turista(passaporte),
 	restaurante NUMERIC(11, 0),
 	CONSTRAINT fk_restaurante FOREIGN KEY(restaurante) REFERENCES restaurante(documento),
-	nota NUMERIC(2, 1) NOT NULL CHECK (nota>0),
+	nota NUMERIC(1, 1) NOT NULL CHECK (nota>=0 and nota <= 5),
 	CONSTRAINT pk_avaliacao PRIMARY KEY(turista, restaurante)
 );
 
