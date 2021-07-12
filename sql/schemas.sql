@@ -16,7 +16,6 @@ CREATE TABLE parque_tematico(
 	documento NUMERIC(11, 0) PRIMARY KEY CHECK (documento>0),
 	pais VARCHAR(30) NOT NULL,
 	nome VARCHAR(30) NOT NULL,
-	cidade VARCHAR(30) NOT NULL, 
 	preco NUMERIC(5, 2) CHECK (preco > 0),
 	lotacao_maxima INTEGER CHECK(lotacao_maximo > 0),
 	dom_inicio 	TIME,
@@ -117,7 +116,6 @@ CREATE TABLE turista(
 	nome VARCHAR(30) NOT NULL,
 	data_nascimento DATE NOT NULL, -- tipo DATE
 	telefone VARCHAR(20),
-	nacionalidade VARCHAR(255), --!!! não sei se isso deveria referenciar pais e se talvez isso tbm precise estar junto da PK. (DUVIDA)
 	hotel NUMERIC(11, 0),
 	quarto INTEGER,
 	CONSTRAINT fk_quarto FOREIGN KEY(hotel, quarto) REFERENCES quarto(hotel, numero)
