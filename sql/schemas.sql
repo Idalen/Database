@@ -116,9 +116,6 @@ CREATE TABLE turista(
 	nome VARCHAR(30) NOT NULL,
 	data_nascimento DATE NOT NULL, -- tipo DATE
 	telefone VARCHAR(20),
-	hotel NUMERIC(11, 0),
-	quarto INTEGER,
-	CONSTRAINT fk_quarto FOREIGN KEY(hotel, quarto) REFERENCES quarto(hotel, numero)
 );
 
 -- Criando tabela de Restrições Alimentares do Turista
@@ -153,10 +150,13 @@ CREATE TABLE avaliacao(
 CREATE TABLE hospedagem(
 	turista NUMERIC(11, 0),
 	CONSTRAINT fk_turista FOREIGN KEY(turista) REFERENCES turista(passaporte),
+	hotal NUMERIC(11, 0),
+	quarto INTEGER,
 	checkin TIMESTAMP,
 	checkout TIMESTAMP,
+	CONSTRAINT fk_quarto FOREIGN KEY(quarto, hotel) REFERENCES quarto(numero, hotel)
 	CONSTRAINT valid_hospedagem_timestamp CHECK (checkin < checkout)
-	CONSTRAINT pk_hospedagem PRIMARY KEY(turista, checkin, checkout)
+	CONSTRAINT pk_hospedagem PRIMARY KEY(turista, quarto, hotel, checkin, checkout)
 );
 
 -- Criando tabela do Grupo de Turistas 
