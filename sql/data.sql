@@ -1,8 +1,11 @@
 -- Insercao de dados em PAIS
 
 INSERT INTO pais
-    VALUES ('Argentina'),
-    ('Angola');
+    VALUES ('ARGENTINA'),
+    ('ANGOLA'),
+    ('JAPAO'),
+    ('BRASIL'),
+    ('ITALIA');
 
 
 -- Insercao de dados em PARQUE TEMATICO
@@ -10,8 +13,8 @@ INSERT INTO pais
 INSERT INTO parque_tematico  
     VALUES(
         12345678911, 
-        'Argentina',
-        'Parque Didi',
+        'ARGENTINA',
+        'PARQUE DIDI',
         150.0,
         700,
         '08:00:00','22:00:00',
@@ -24,8 +27,8 @@ INSERT INTO parque_tematico
         ),
         (
         12345678910, 
-        'Angola',
-        'Parque Madu',
+        'ANGOLA',
+        'PARQUE MADU',
         99.99,
         NULL,
         '08:00:00','22:00:00',
@@ -197,6 +200,12 @@ INSERT INTO turista
         'DANIEL',
         '2001-09-18',
         '(16)999999997'
+    ),
+    (
+        12345678919,
+        'FRED',
+        '2000-10-10',
+        '(16)999999996'
     );
 
 -- insercao de dados restricoes alimentares
@@ -281,11 +290,145 @@ INSERT INTO hospedagem
         '[2021-05-10 13:00, 2021-05-15 09:30)'
     );
 
---  INSERT INTO grupo_turistas
---    VALUES
---    (),
---    (),
---    ();
+INSERT INTO grupo_turistas
+    VALUES
+    (
+        12345678919, -- admin grupo
+        'GRUPO DO FRED' -- nome grupo
+    ),
+    (
+        12345678916,
+        'GRUPO DO DIOGO'
+    );
 
+INSERT INTO participacao
+    VALUES
+    (
+        12345678919,
+        12345678919,
+        'GRUPO DO FRED'
+    ),
+    (
+        12345678918,
+        12345678919,
+        'GRUPO DO FRED'
+    ),
+    (
+        12345678916,
+        12345678916,
+        'GRUPO DO DIOGO'
+    ),
+    (
+        12345678917,
+        12345678916,
+        'GRUPO DO DIOGO'
+    );
 
+INSERT INTO viagem
+    VALUES
+    (
+        12345678919, -- admin_grupo
+        'GRUPO DO FRED', -- nome_grupo
+        '[2021-05-10, 2021-05-20)', -- duracao
+        'BRASIL', -- pais_origem
+        'JAPAO' -- pais_destino
+    ),
+    (
+        12345678916,
+        'GRUPO DO DIOGO',
+        '[2021-03-20, 2021-04-01)',
+        'ANGOLA',
+        'ITALIA'
+    );
 
+INSERT INTO passeio
+    VALUES
+    (
+        DEFAULT, -- id
+        '2021-05-22', -- data
+        12345678919, -- admin grupo
+        'GRUPO DO FRED', -- nome grupo
+        12345678910, -- parque
+        'MARIA',
+        120
+    ),
+    (
+        DEFAULT,
+        '2021-05-22',
+        12345678916,
+        'GRUPO DO DIOGO',
+        12345678911,
+        'NATALIA',
+        60
+    );
+
+-- insercao de dados idiomas_guias
+INSERT INTO idiomas_guia
+    VALUES 
+    (
+        1,
+        'FRANCES'
+    ),
+    (
+        1,
+        'INGLES'
+    ),
+    (
+        2,
+        'ESPANHOL'
+    );
+
+INSERT INTO atracao
+    VALUES
+    (
+        12345678910,
+        'RODA GIGANTE',
+        FALSE,
+        40
+    ),
+    (
+        12345678911,
+        'MONTANHA RUSSA',
+        FALSE,
+        50
+    ),
+    (
+        12345678911,
+        'CINEMA',
+        TRUE,
+        100
+    ),
+    (
+        12345678910,
+        'TEATRO',
+        TRUE,
+        50
+    );
+
+INSERT INTO evento
+    VALUES
+    (
+        1,
+        12345678911,
+        'CINEMA',
+        '123456'
+    ),
+    (
+        2,
+        12345678910,
+        'TEATRO',
+        '123457'
+    );
+
+INSERT INTO restricoes_atracao
+    VALUES
+    (
+        12345678910,
+        'RODA GIGANTE',
+        'IDADE MINIMA 13'
+    ),
+    (
+        12345678911,
+        'MONTANHA RUSSA',
+        'ALTURA MINIMA 140'
+    );

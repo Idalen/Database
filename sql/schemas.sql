@@ -180,27 +180,28 @@ CREATE TABLE participacao(
 CREATE TABLE viagem(
 	admin_grupo NUMERIC(11, 0),
 	nome_grupo VARCHAR(255),
-	data_partida TIMESTAMP,
-	data_chegada TIMESTAMP,
+	duracao DATERANGE,
 	pais_origem VARCHAR(30) NOT NULL,
 	pais_destino VARCHAR(30) NOT NULL,
 	CONSTRAINT fk_grupo FOREIGN KEY(admin_grupo, nome_grupo) REFERENCES grupo_turistas(admin, nome_grupo) ON DELETE CASCADE,
-	CONSTRAINT fk_pais_origem FOREIGN KEY(pais_origem) REFERENCES pais(nome_pais) ON DELETE CASCADE,
+	CONSTRAINT fk_pais_origem FOREIGN KEY(pais_origem) REFERENCES pais(nome_pais) ON DELETE CASCADE, 
 	CONSTRAINT fk_pais_destino FOREIGN KEY(pais_destino) REFERENCES pais(nome_pais) ON DELETE CASCADE, 
-	CONSTRAINT pk_viagem PRIMARY KEY(admin_grupo, nome_grupo, data_partida, data_chegada)
+	CONSTRAINT pk_viagem PRIMARY KEY(admin_grupo, nome_grupo, duracao)
 );
 
 -- Criando tabela do Passeio
 CREATE TABLE passeio(
 	id SERIAL PRIMARY KEY,
-	data DATE UNIQUE, 
-	admin_grupo NUMERIC(11, 0), 
+	data DATE, 
+	admin_grupo NUMERIC(11, 0),
 	nome_grupo VARCHAR(30),
-	parque NUMERIC(11, 0) UNIQUE,
+	parque NUMERIC(11, 0),
 	nome_guia VARCHAR(30),
 	preco_guia NUMERIC(5, 2) CHECK (preco_guia >=0 ), -- preco-guia tem que ser no minimo 0CONSTRAINT un_grupo UNIQUE (admin_grupo, nome_grupo),
+	CONSTRAINT un_passeio UNIQUE(data, admin_grupo, nome_grupo, parque),
 	CONSTRAINT fk_grupo FOREIGN KEY(admin_grupo, nome_grupo) REFERENCES grupo_turistas(admin, nome_grupo) ON DELETE CASCADE,
-	CONSTRAINT fk_parque FOREIGN KEY(parque) REFERENCES parque_tematico(documento) ON DELETE CASCADE	
+	CONSTRAINT fk_parque FOREIGN KEY(parque) REFERENCES parque_tematico(documento) ON DELETE CASCADE
+	
 );
 
 -- Criando tabela dos idiomas do(a) guia
@@ -215,7 +216,7 @@ CREATE TABLE idiomas_guia(
 CREATE TABLE atracao(
 	parque NUMERIC(11, 0),
 	nome VARCHAR(30),
-	tipo VARCHAR(30),
+	tipo BOOLEAN, -- FALSE: LIVRE, TRUE: RESERVADA
 	-- tem que ter disponibilidade aqui, mas n sei oq significa
 	capacidade INTEGER CHECK (capacidade > 0), -- capacidade precisa ser positiva
 	CONSTRAINT fk_parque FOREIGN KEY(parque) REFERENCES parque_tematico(documento) ON DELETE CASCADE,
