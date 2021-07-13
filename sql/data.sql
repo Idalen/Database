@@ -345,7 +345,7 @@ INSERT INTO passeio
     VALUES
     (
         DEFAULT, -- id
-        '2021-05-22', -- data
+        '2021-05-19', -- data
         12345678919, -- admin grupo
         'GRUPO DO FRED', -- nome grupo
         12345678910, -- parque
@@ -354,7 +354,7 @@ INSERT INTO passeio
     ),
     (
         DEFAULT,
-        '2021-05-22',
+        '2021-03-30',
         12345678916,
         'GRUPO DO DIOGO',
         12345678911,

@@ -272,7 +272,7 @@ DECLARE
 BEGIN
   	for d in select data_inicio, data_fim from viagem where (admin_grupo = NEW.admin_grupo AND nome_grupo = NEW.nome_grupo)
   	loop
-	if NEW.data BETWEEN d.data_inicio AND d.data_fim then 
+	if NEW.data NOT BETWEEN d.data_inicio AND d.data_fim then 
 		raise exception 'FODASE';
 	end if;
   	end loop;
