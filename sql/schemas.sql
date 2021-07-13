@@ -109,6 +109,7 @@ CREATE TABLE quarto(
 	CONSTRAINT pk_quarto PRIMARY KEY(hotel, numero)
 );
 
+
 -- Criando tabela do Turista
 CREATE TABLE turista(
 	passaporte NUMERIC(11, 0) PRIMARY KEY CHECK(passaporte > 0),
@@ -180,28 +181,31 @@ CREATE TABLE participacao(
 CREATE TABLE viagem(
 	admin_grupo NUMERIC(11, 0),
 	nome_grupo VARCHAR(255),
-	duracao DATERANGE,
+	data_inicio DATE,
+	data_fim DATE,
 	pais_origem VARCHAR(30) NOT NULL,
 	pais_destino VARCHAR(30) NOT NULL,
+	CONSTRAINT check_data CHECK (data_inicio < data_fim),
 	CONSTRAINT fk_grupo FOREIGN KEY(admin_grupo, nome_grupo) REFERENCES grupo_turistas(admin, nome_grupo) ON DELETE CASCADE,
-	CONSTRAINT fk_pais_origem FOREIGN KEY(pais_origem) REFERENCES pais(nome_pais) ON DELETE CASCADE, 
+	CONSTRAINT fk_pais_origem FOREIGN KEY(pais_origem) REFERENCES pais(nome_pais) ON DELETE CASCADE,
 	CONSTRAINT fk_pais_destino FOREIGN KEY(pais_destino) REFERENCES pais(nome_pais) ON DELETE CASCADE, 
-	CONSTRAINT pk_viagem PRIMARY KEY(admin_grupo, nome_grupo, duracao)
+	CONSTRAINT pk_viagem PRIMARY KEY(admin_grupo, nome_grupo, data_inicio, data_fim)
 );
+
+
 
 -- Criando tabela do Passeio
 CREATE TABLE passeio(
 	id SERIAL PRIMARY KEY,
 	data DATE, 
-	admin_grupo NUMERIC(11, 0),
+	admin_grupo NUMERIC(11, 0), 
 	nome_grupo VARCHAR(30),
 	parque NUMERIC(11, 0),
 	nome_guia VARCHAR(30),
 	preco_guia NUMERIC(5, 2) CHECK (preco_guia >=0 ), -- preco-guia tem que ser no minimo 0CONSTRAINT un_grupo UNIQUE (admin_grupo, nome_grupo),
-	CONSTRAINT un_passeio UNIQUE(data, admin_grupo, nome_grupo, parque),
 	CONSTRAINT fk_grupo FOREIGN KEY(admin_grupo, nome_grupo) REFERENCES grupo_turistas(admin, nome_grupo) ON DELETE CASCADE,
-	CONSTRAINT fk_parque FOREIGN KEY(parque) REFERENCES parque_tematico(documento) ON DELETE CASCADE
-	
+	CONSTRAINT fk_parque FOREIGN KEY(parque) REFERENCES parque_tematico(documento) ON DELETE CASCADE,
+	CONSTRAINT un_passeio UNIQUE(data, admin_grupo, nome_grupo, parque)
 );
 
 -- Criando tabela dos idiomas do(a) guia
@@ -216,7 +220,7 @@ CREATE TABLE idiomas_guia(
 CREATE TABLE atracao(
 	parque NUMERIC(11, 0),
 	nome VARCHAR(30),
-	tipo BOOLEAN, -- FALSE: LIVRE, TRUE: RESERVADA
+	tipo VARCHAR(30),
 	-- tem que ter disponibilidade aqui, mas n sei oq significa
 	capacidade INTEGER CHECK (capacidade > 0), -- capacidade precisa ser positiva
 	CONSTRAINT fk_parque FOREIGN KEY(parque) REFERENCES parque_tematico(documento) ON DELETE CASCADE,
@@ -243,4 +247,44 @@ CREATE TABLE restricoes_atracao(
     CONSTRAINT pk_restricoes_atracao PRIMARY KEY(parque_atracao, nome_atracao, restricao)
 );
 
+
+CREATE FUNCTION update_hotel() RETURNS trigger AS
+$BODY$
+BEGIN
+  UPDATE hotel
+  SET total_quartos = total_quartos + 1, total_vagas = total_vagas+NEW.vagas
+  WHERE documento = NEW.hotel;
+  RETURN NEW;
+END
+$BODY$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER update_hotel_after_insert
+AFTER INSERT 
+ON quarto
+FOR EACH ROW
+EXECUTE PROCEDURE update_hotel();
+
+CREATE FUNCTION check_duration() RETURNS TRIGGER AS
+$BODY$
+DECLARE
+	d record;
+BEGIN
+  	for d in select data_inicio, data_fim from viagem where (admin_grupo = NEW.admin_grupo AND nome_grupo = NEW.nome_grupo)
+  	loop
+	if NEW.data BETWEEN d.data_inicio AND d.data_fim then 
+		raise exception 'FODASE';
+	end if;
+  	end loop;
+  	RETURN NEW;
+END
+$BODY$
+LANGUAGE plpgsql;
+
+
+CREATE TRIGGER check_duration_trigger
+BEFORE INSERT 
+ON passeio
+FOR EACH ROW
+EXECUTE PROCEDURE check_duration();
 

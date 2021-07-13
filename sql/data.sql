@@ -329,14 +329,14 @@ INSERT INTO viagem
     (
         12345678919, -- admin_grupo
         'GRUPO DO FRED', -- nome_grupo
-        '[2021-05-10, 2021-05-20)', -- duracao
+        '2021-05-10' , '2021-05-20', -- duracao
         'BRASIL', -- pais_origem
         'JAPAO' -- pais_destino
     ),
     (
         12345678916,
         'GRUPO DO DIOGO',
-        '[2021-03-20, 2021-04-01)',
+        '2021-03-20', '2021-04-01',
         'ANGOLA',
         'ITALIA'
     );
