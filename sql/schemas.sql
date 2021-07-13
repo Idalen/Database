@@ -63,7 +63,7 @@ CREATE TABLE restaurante(
 	sex_fim 	TIME,
 	sab_inicio 	TIME,
 	sab_fim 	TIME,
-	CONSTRAINT fk_parque FOREIGN KEY(parque) REFERENCES parque_tematico(documento), 
+	CONSTRAINT fk_parque FOREIGN KEY(parque) REFERENCES parque_tematico(documento) ON DELETE CASCADE, 
 	-- check de horario
 	CONSTRAINT valid_dom CHECK (dom_inicio < dom_fim),
 	CONSTRAINT valid_seg CHECK (seg_inicio < seg_fim),
@@ -78,7 +78,7 @@ CREATE TABLE restaurante(
 CREATE TABLE cozinha(
 	restaurante NUMERIC(11, 0),
 	tipo_cozinha VARCHAR(30),
-	CONSTRAINT fk_rest FOREIGN KEY(restaurante) REFERENCES restaurante(documento), 
+	CONSTRAINT fk_rest FOREIGN KEY(restaurante) REFERENCES restaurante(documento) ON DELETE CASCADE, 
 	CONSTRAINT pk_cozinha PRIMARY KEY(restaurante, tipo_cozinha)
 );
 
@@ -89,14 +89,14 @@ CREATE TABLE hotel(
 	nome VARCHAR(30),
 	total_quartos INTEGER CHECK (total_quartos >= 0), -- total de quartos nao pode ser negativo
 	total_vagas INTEGER CHECK (total_quartos <= total_vagas), --sempre ha, no minimo, uma vaga, ocupada ou não, para cada quarto
-	CONSTRAINT fk_parque FOREIGN KEY(parque) REFERENCES parque_tematico(documento)
+	CONSTRAINT fk_parque FOREIGN KEY(parque) REFERENCES parque_tematico(documento) ON DELETE CASCADE
 );
 
 -- Criando tabela dos serviços do hotel
 CREATE TABLE servico_hotel(
 	hotel NUMERIC(11, 0),
 	servico VARCHAR(30),
-	CONSTRAINT fk_hotel FOREIGN KEY(hotel) REFERENCES hotel(documento),
+	CONSTRAINT fk_hotel FOREIGN KEY(hotel) REFERENCES hotel(documento) ON DELETE CASCADE,
 	CONSTRAINT pk_servico_hotel PRIMARY KEY(hotel, servico)
 );
 
@@ -105,7 +105,7 @@ CREATE TABLE quarto(
 	hotel NUMERIC(11, 0),
 	numero INTEGER CHECK(numero > 0), --O numero do quarto não pode ser 0 ou negativo 
 	vagas INTEGER CHECK(vagas > 0),
-	CONSTRAINT fk_hotel FOREIGN KEY(hotel) REFERENCES hotel(documento),
+	CONSTRAINT fk_hotel FOREIGN KEY(hotel) REFERENCES hotel(documento) ON DELETE CASCADE,
 	CONSTRAINT pk_quarto PRIMARY KEY(hotel, numero)
 );
 
@@ -121,7 +121,7 @@ CREATE TABLE turista(
 CREATE TABLE restricoes_alimentares(
 	turista NUMERIC(11, 0),
 	restricao VARCHAR(30),
-	CONSTRAINT fk_turista FOREIGN KEY(turista) REFERENCES turista(passaporte),
+	CONSTRAINT fk_turista FOREIGN KEY(turista) REFERENCES turista(passaporte) ON DELETE CASCADE,
 	CONSTRAINT pk_restricoes_alimentares PRIMARY KEY(turista, restricao)
 );
 
@@ -130,7 +130,7 @@ CREATE TABLE restricoes_alimentares(
 CREATE TABLE necessidades_especiais(
 	turista NUMERIC(11, 0),
 	necessidade VARCHAR(30),
-	CONSTRAINT fk_turista FOREIGN KEY(turista) REFERENCES turista(passaporte),
+	CONSTRAINT fk_turista FOREIGN KEY(turista) REFERENCES turista(passaporte) ON DELETE CASCADE,
 	CONSTRAINT pk_necessidades_especiais PRIMARY KEY(turista, necessidade)
 );
 
@@ -140,8 +140,8 @@ CREATE TABLE avaliacao(
 	turista NUMERIC(11, 0),
 	restaurante NUMERIC(11, 0),
 	nota NUMERIC(2, 1) NOT NULL CHECK (nota>=0 and nota <= 5),
-	CONSTRAINT fk_turista FOREIGN KEY(turista) REFERENCES turista(passaporte),
-	CONSTRAINT fk_restaurante FOREIGN KEY(restaurante) REFERENCES restaurante(documento),
+	CONSTRAINT fk_turista FOREIGN KEY(turista) REFERENCES turista(passaporte) ON DELETE CASCADE,
+	CONSTRAINT fk_restaurante FOREIGN KEY(restaurante) REFERENCES restaurante(documento) ON DELETE CASCADE,
 	CONSTRAINT pk_avaliacao PRIMARY KEY(turista, restaurante)
 );
 
@@ -151,8 +151,8 @@ CREATE TABLE hospedagem(
 	hotel NUMERIC(11, 0),
 	quarto INTEGER,
 	duracao TSRANGE,
-	CONSTRAINT fk_turista FOREIGN KEY(turista) REFERENCES turista(passaporte),
-	CONSTRAINT fk_quarto FOREIGN KEY(quarto, hotel) REFERENCES quarto(numero, hotel),
+	CONSTRAINT fk_turista FOREIGN KEY(turista) REFERENCES turista(passaporte) ON DELETE CASCADE,
+	CONSTRAINT fk_quarto FOREIGN KEY(quarto, hotel) REFERENCES quarto(numero, hotel) ON DELETE CASCADE,
 	--CONSTRAINT valid_hospedagem_timestamp CHECK (checkin < checkout),
 	CONSTRAINT pk_hospedagem PRIMARY KEY(turista, quarto, hotel, duracao)
 );
@@ -161,7 +161,7 @@ CREATE TABLE hospedagem(
 CREATE TABLE grupo_turistas(
 	admin NUMERIC(11, 0),
 	nome_grupo VARCHAR(30),
-	CONSTRAINT fk_admin FOREIGN KEY(admin) REFERENCES turista(passaporte),
+	CONSTRAINT fk_admin FOREIGN KEY(admin) REFERENCES turista(passaporte) ON DELETE CASCADE,
 	CONSTRAINT pk_grupo_turistas PRIMARY KEY(admin, nome_grupo)
 );
 
@@ -170,8 +170,8 @@ CREATE TABLE participacao(
 	turista NUMERIC(11, 0),
 	admin_grupo NUMERIC(11, 0),
 	nome_grupo VARCHAR(30),
-	CONSTRAINT fk_turista FOREIGN KEY(turista) REFERENCES turista(passaporte),
-	CONSTRAINT fk_grupo FOREIGN KEY(admin_grupo, nome_grupo) REFERENCES grupo_turistas(admin, nome_grupo),
+	CONSTRAINT fk_turista FOREIGN KEY(turista) REFERENCES turista(passaporte) ON DELETE CASCADE,
+	CONSTRAINT fk_grupo FOREIGN KEY(admin_grupo, nome_grupo) REFERENCES grupo_turistas(admin, nome_grupo) ON DELETE CASCADE,
 	CONSTRAINT pk_participacao PRIMARY KEY(turista, admin_grupo, nome_grupo)
 );
 
@@ -184,9 +184,9 @@ CREATE TABLE viagem(
 	data_chegada TIMESTAMP,
 	pais_origem VARCHAR(30) NOT NULL,
 	pais_destino VARCHAR(30) NOT NULL,
-	CONSTRAINT fk_grupo FOREIGN KEY(admin_grupo, nome_grupo) REFERENCES grupo_turistas(admin, nome_grupo),
-	CONSTRAINT fk_pais_origem FOREIGN KEY(pais_origem) REFERENCES pais(nome_pais),
-	CONSTRAINT fk_pais_destino FOREIGN KEY(pais_destino) REFERENCES pais(nome_pais), 
+	CONSTRAINT fk_grupo FOREIGN KEY(admin_grupo, nome_grupo) REFERENCES grupo_turistas(admin, nome_grupo) ON DELETE CASCADE,
+	CONSTRAINT fk_pais_origem FOREIGN KEY(pais_origem) REFERENCES pais(nome_pais) ON DELETE CASCADE,
+	CONSTRAINT fk_pais_destino FOREIGN KEY(pais_destino) REFERENCES pais(nome_pais) ON DELETE CASCADE, 
 	CONSTRAINT pk_viagem PRIMARY KEY(admin_grupo, nome_grupo, data_partida, data_chegada)
 );
 
@@ -199,16 +199,15 @@ CREATE TABLE passeio(
 	parque NUMERIC(11, 0) UNIQUE,
 	nome_guia VARCHAR(30),
 	preco_guia NUMERIC(5, 2) CHECK (preco_guia >=0 ), -- preco-guia tem que ser no minimo 0CONSTRAINT un_grupo UNIQUE (admin_grupo, nome_grupo),
-	CONSTRAINT fk_grupo FOREIGN KEY(admin_grupo, nome_grupo) REFERENCES grupo_turistas(admin, nome_grupo),
-	CONSTRAINT fk_parque FOREIGN KEY(parque) REFERENCES parque_tematico(documento)
-	
+	CONSTRAINT fk_grupo FOREIGN KEY(admin_grupo, nome_grupo) REFERENCES grupo_turistas(admin, nome_grupo) ON DELETE CASCADE,
+	CONSTRAINT fk_parque FOREIGN KEY(parque) REFERENCES parque_tematico(documento) ON DELETE CASCADE	
 );
 
 -- Criando tabela dos idiomas do(a) guia
 CREATE TABLE idiomas_guia(
 	passeio INTEGER,
 	idioma VARCHAR(50),
-	CONSTRAINT fk_passeio FOREIGN KEY(passeio) REFERENCES passeio(id),
+	CONSTRAINT fk_passeio FOREIGN KEY(passeio) REFERENCES passeio(id) ON DELETE CASCADE,
 	CONSTRAINT pk_idiomas_guia PRIMARY KEY(passeio, idioma)
 );
 
@@ -219,7 +218,7 @@ CREATE TABLE atracao(
 	tipo VARCHAR(30),
 	-- tem que ter disponibilidade aqui, mas n sei oq significa
 	capacidade INTEGER CHECK (capacidade > 0), -- capacidade precisa ser positiva
-	CONSTRAINT fk_parque FOREIGN KEY(parque) REFERENCES parque_tematico(documento),
+	CONSTRAINT fk_parque FOREIGN KEY(parque) REFERENCES parque_tematico(documento) ON DELETE CASCADE,
 	CONSTRAINT pk_atracao PRIMARY KEY(parque, nome)
 );
 
@@ -229,8 +228,8 @@ CREATE TABLE evento(
 	parque_atracao NUMERIC(11, 0),
 	nome_atracao VARCHAR(30),
 	ingresso CHAR (25) NOT NULL, -- ingresso vai ser uma string com seu id
-	CONSTRAINT fk_passeio FOREIGN KEY(passeio) REFERENCES passeio(id),
-	CONSTRAINT fk_atracao FOREIGN KEY(parque_atracao, nome_atracao) REFERENCES atracao(parque, nome), 
+	CONSTRAINT fk_passeio FOREIGN KEY(passeio) REFERENCES passeio(id) ON DELETE CASCADE,
+	CONSTRAINT fk_atracao FOREIGN KEY(parque_atracao, nome_atracao) REFERENCES atracao(parque, nome) ON DELETE CASCADE, 
 	CONSTRAINT pk_evento PRIMARY KEY(passeio, parque_atracao, nome_atracao)
 );
 		
@@ -239,7 +238,7 @@ CREATE TABLE restricoes_atracao(
 	parque_atracao NUMERIC(11, 0),
 	nome_atracao VARCHAR(30),
 	restricao VARCHAR(30), -- ajeitar no MR
-	CONSTRAINT fk_atracao FOREIGN KEY(parque_atracao, nome_atracao) REFERENCES atracao(parque, nome),
+	CONSTRAINT fk_atracao FOREIGN KEY(parque_atracao, nome_atracao) REFERENCES atracao(parque, nome) ON DELETE CASCADE,
     CONSTRAINT pk_restricoes_atracao PRIMARY KEY(parque_atracao, nome_atracao, restricao)
 );
 
