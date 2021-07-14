@@ -1,3 +1,4 @@
+-- Deletando database se este já existir
 DROP DATABASE IF EXISTS turismo_bd;
 
 -- Criando database
@@ -13,12 +14,12 @@ CREATE TABLE pais(
 
 -- Criando tabela do Parque Temático
 CREATE TABLE parque_tematico(
-	documento NUMERIC(11, 0) PRIMARY KEY CHECK (documento>0),
+	documento NUMERIC(11, 0) PRIMARY KEY CHECK (documento > 0),
 	pais VARCHAR(30) NOT NULL,
 	nome VARCHAR(30) NOT NULL,
-	preco NUMERIC(5, 2) CHECK (preco > 0),
+	preco NUMERIC(6, 2) CHECK (preco > 0),
 	lotacao_maxima INTEGER CHECK(lotacao_maxima > 0),
-	dom_inicio 	TIME,
+	dom_inicio 	TIME, 
 	dom_fim 	TIME,
 	seg_inicio 	TIME,
 	seg_fim 	TIME,
@@ -33,7 +34,7 @@ CREATE TABLE parque_tematico(
 	sab_inicio 	TIME,
 	sab_fim 	TIME,
 	CONSTRAINT fk_pais FOREIGN KEY(pais) REFERENCES pais(nome_pais) ON DELETE SET NULL,
-	-- Check de horario
+	-- Check de range de horário de funcionamento
 	CONSTRAINT valid_dom CHECK (dom_inicio < dom_fim), 
 	CONSTRAINT valid_seg CHECK (seg_inicio < seg_fim),
 	CONSTRAINT valid_ter CHECK (ter_inicio < ter_fim),
@@ -288,3 +289,4 @@ ON passeio
 FOR EACH ROW
 EXECUTE PROCEDURE check_duration();
 
+-- TRIGGER: criação do grupo, administrador é adicionado automaticamente.

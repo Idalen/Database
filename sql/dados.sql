@@ -1,29 +1,30 @@
--- Insercao de dados em PAIS
+-- Inserção de dados no banco de dados, com no mínimo 2 tuplas por tabela.
 
+-- Tabela PAIS
 INSERT INTO pais
-    VALUES ('ARGENTINA'),
+    VALUES 
+    ('ARGENTINA'), -- nome do país (PK)
     ('ANGOLA'),
     ('JAPAO'),
     ('BRASIL'),
     ('ITALIA');
 
 
--- Insercao de dados em PARQUE TEMATICO
-
+-- Tabela PARQUE TEMATICO
 INSERT INTO parque_tematico  
     VALUES(
-        12345678911, 
-        'ARGENTINA',
-        'PARQUE DIDI',
-        150.0,
-        700,
-        '08:00:00','22:00:00',
-        '09:00:00','12:00:00',
-        '09:00:00','12:00:00',
-        '09:00:00','12:00:00',
-        '09:00:00','12:00:00',
-        '09:00:00','12:00:00',
-        '08:00:00','22:00:00'
+        12345678911, -- documento do parque temático (PK)
+        'ARGENTINA', -- nome do país (FK)
+        'PARQUE DIDI', -- nome do parque
+        150.0, -- preço do ingresso
+        700, -- lotação máxima
+        '08:00:00','22:00:00', -- horário de funcionamento (abertura, fechamento) no domingo
+        '09:00:00','12:00:00', -- horário de funcionamento (abertura, fechamento) na segunda
+        '09:00:00','12:00:00', -- horário de funcionamento (abertura, fechamento) na terça
+        '09:00:00','12:00:00', -- horário de funcionamento (abertura, fechamento) na quarta
+        '09:00:00','12:00:00', -- horário de funcionamento (abertura, fechamento) na quinta
+        '09:00:00','12:00:00', -- horário de funcionamento (abertura, fechamento) na sexta
+        '08:00:00','22:00:00'  -- horário de funcionamento (abertura, fechamento) no sábado
         ),
         (
         12345678910, 
@@ -41,21 +42,21 @@ INSERT INTO parque_tematico
         );
 
 
--- Insercao de dados em restaurante
+-- Tabela RESTAURANTE
 INSERT INTO restaurante
     VALUES
     (
-        12345678912, -- documento restaurante
-        12345678911, -- documento parque
-        'RESTAURANTE DO DIOGO', -- nome restaurante
+        12345678912, -- documento do restaurante (PK)
+        12345678911, -- documento do parque (FK)
+        'RESTAURANTE DO DIOGO', -- nome do restaurante
         numrange(100, 500, '[)'),-- faixa de preço,
-        '08:00:00','21:00:00', -- ini fim dom
-        '09:00:00','12:00:00', -- ini fim seg
-        '10:00:00','15:00:00', -- ini fim ter
-        '09:00:00','12:00:00', -- ini fim qua
-        '08:00:00','19:00:00', -- ini fim qui
-        '09:00:00','12:00:00', -- ini fim sex
-        '08:00:00','22:00:00'  -- ini fim sab
+        '08:00:00','21:00:00', -- horário de funcionamento (abertura, fechamento) no domingo
+        '09:00:00','12:00:00', -- horário de funcionamento (abertura, fechamento) na segunda
+        '10:00:00','15:00:00', -- horário de funcionamento (abertura, fechamento) na terça
+        '09:00:00','12:00:00', -- horário de funcionamento (abertura, fechamento) na quarta
+        '08:00:00','19:00:00', -- horário de funcionamento (abertura, fechamento) na quinta
+        '09:00:00','12:00:00', -- horário de funcionamento (abertura, fechamento) na sexta
+        '08:00:00','22:00:00'  -- horário de funcionamento (abertura, fechamento) no sábado
     ),
     (
         12345678913,
@@ -71,12 +72,12 @@ INSERT INTO restaurante
         '08:00:00','22:00:00'
     );
 
--- Insercao dados tabela cozinha
+-- Tabela COZINHA
 INSERT INTO cozinha 
     VALUES
     (
-        12345678912, -- documento restaurante
-        'FRANCESA' -- cozinha
+        12345678912, -- documento do restaurante (FK)(PK)
+        'FRANCESA' -- cozinha (PK)
     ),
     (
         12345678912,
@@ -95,15 +96,15 @@ INSERT INTO cozinha
         'COREANA'
     );
 
--- insercao de dados em hotel
+-- Tabela HOTEL
 INSERT INTO hotel
     VALUES
     (
-        12345678914, -- documento hotel
-        12345678911, -- fk parque
-        'HOTEL DO DIOGO', -- nome hotel
-        0, -- total_quartos
-        0 -- total_vagas
+        12345678914, -- documento do hotel (PK)
+        12345678911, -- documento do parque (FK)
+        'HOTEL DO DIOGO', -- nome do hotel
+        0, -- total de quartos
+        0 -- total de vagas
     ),
     (
         12345678915,
@@ -113,12 +114,12 @@ INSERT INTO hotel
         0
     );
 
--- insercaod e dados em servico hotel
+-- Tabela SERVIÇO HOTEL
 INSERT INTO servico_hotel
     VALUES
     (
-        12345678914, -- documento hotel
-        'LAVANDERIA' -- serviço
+        12345678914, -- documento do hotel (FK)(PK)
+        'LAVANDERIA' -- nome do serviço (PK) 
     ),
     (
         12345678914,
@@ -141,13 +142,13 @@ INSERT INTO servico_hotel
         'SAUNA'
     );
 
--- insercao de dados na tabela quarto
+-- Tabela QUARTO
 INSERT INTO quarto
     VALUES 
     (
-        12345678914, -- documento do hotel
-        1, -- número do quarto
-        2
+        12345678914, -- documento do hotel (FK)(PK)
+        1, -- número do quarto (PK)
+        2 -- número de vagas 
     ),
     (
         12345678914,
@@ -180,11 +181,11 @@ INSERT INTO quarto
         4
     );
 
--- insercao de dados em turista
+-- Tabela TURISTA
 INSERT INTO turista
     VALUES
     (
-        12345678916, -- passaporte
+        12345678916, -- número do passaporte (PK)
         'DIOGO', -- nome 
         '2000-03-27', -- data de nascimento
         '(16)999999999' -- telefone
@@ -208,12 +209,12 @@ INSERT INTO turista
         '(16)999999996'
     );
 
--- insercao de dados restricoes alimentares
+-- Tabela RESTRIÇÕES ALIMENTARES
 INSERT INTO restricoes_alimentares
     VALUES
     (
-        12345678917,
-        'ALERGIA CAMARAO'
+        12345678917, -- passaporte turista (FK)(PK)
+        'ALERGIA CAMARAO' -- descrição da restrição (PK)
     ),
     (
         12345678917,
@@ -228,23 +229,25 @@ INSERT INTO restricoes_alimentares
         'VEGANO'
     );
 
+-- Tabela NECESSIDADES ESPECIAIS
 INSERT INTO necessidades_especiais
     VALUES
     (
-        12345678916, -- passaporte turista
-        'CADEIRANTE' -- necessidade
+        12345678916, -- passaporte do turista (FK)(PK)
+        'CADEIRANTE' -- descrição da necessidade (PK)
     ),
     (
         12345678917,
         'DEFICIENTE VISUAL'
     );
 
+-- Tabela AVALIAÇÃO dos restaurantes
 INSERT INTO avaliacao
     VALUES
     (
-        12345678916, -- passaporte turista
-        12345678912,
-        5
+        12345678916, -- passaporte do turista (FK)(PK)
+        12345678912, -- documento do restaurante (FK)(PK)
+        5 -- nota
     ),
     (
         12345678916,
@@ -267,14 +270,14 @@ INSERT INTO avaliacao
         1
     );
 
--- insercao de dados hospedagem
+-- Tabela HOSPEDAGEM
 INSERT INTO hospedagem
     VALUES 
     (
-        12345678918, -- turista
-        12345678914, -- hotel
-        2, -- quarto
-        '[2021-05-06 13:00, 2021-05-07 10:00)' -- duracao
+        12345678918, -- passaporte do turista (FK)(PK)
+        12345678914, -- documento do hotel (FK)(PK)
+        2, -- número do quarto (PK)
+        '[2021-05-06 13:00, 2021-05-07 10:00)' -- duração da estadia (PK)
 
     ),
     (
@@ -290,23 +293,26 @@ INSERT INTO hospedagem
         '[2021-05-10 13:00, 2021-05-15 09:30)'
     );
 
+-- Tabela GRUPO DE TURISTAS
 INSERT INTO grupo_turistas
     VALUES
     (
-        12345678919, -- admin grupo
-        'GRUPO DO FRED' -- nome grupo
+        12345678919, -- passaporte administrador do grupo (FK)(PK)
+        'GRUPO DO FRED' -- nome do grupo (PK)
     ),
     (
         12345678916,
         'GRUPO DO DIOGO'
     );
 
+-- Tabela de PARTICIPACAO de um turista em um grupo de turistas.
+-- OBS: Aqui é necessário adicionar o administrador do grupo como participante também. -- Trigger
 INSERT INTO participacao
     VALUES
     (
-        12345678919,
-        12345678919,
-        'GRUPO DO FRED'
+        12345678919, -- passaporte turista (FK)(PK)
+        12345678919, -- passaporte administrador do grupo (FK)(PK)
+        'GRUPO DO FRED' -- nome do grupo (FK)(PK)
     ),
     (
         12345678918,
