@@ -270,10 +270,10 @@ $BODY$
 DECLARE
 	d record;
 BEGIN
-  	for d in select data_inicio, data_fim from viagem where (admin_grupo = NEW.admin_grupo AND nome_grupo = NEW.nome_grupo)
+  	for d in select * from viagem where admin_grupo = NEW.admin_grupo AND nome_grupo = NEW.nome_grupo
   	loop
 	if NEW.data NOT BETWEEN d.data_inicio AND d.data_fim then 
-		raise exception 'FODASE';
+		raise exception 'Passeio não ocorre no período da viagem';
 	end if;
   	end loop;
   	RETURN NEW;
@@ -309,22 +309,23 @@ EXECUTE PROCEDURE add_admin_as_participant();
 
 CREATE FUNCTION check_viagem_overlapping() RETURNS trigger AS
 $BODY$
+DECLARE
+	d record;
 BEGIN
-	if ((NEW.data_inicio < data_fim) 
-	OR (NEW.data_fim > data_inicio)) 
-	AND
-	(NEW.admin_grupo = admin_grupo 
-	AND NEW.nome_grupo = nome_grupo)
-	then
-		raise exception 'ERRO: existe uma viagem marcada neste período';
-	end if;
+	FOR d IN SELECT data_inicio, data_fim FROM viagem 
+	WHERE admin_grupo = NEW.admin_grupo AND nome_grupo = NEW.nome_grupo
+  	LOOP
+	IF ((NEW.data_inicio < d.data_fim) AND (NEW.data_fim > d.data_inicio)) THEN 
+			raise exception 'Existe uma viagem marcada neste período';
+	END IF;
+  	END LOOP;
 	RETURN NEW;
 END
 $BODY$
 LANGUAGE plpgsql;
 
 CREATE TRIGGER viagem_overlapping
-AFTER INSERT
+BEFORE INSERT
 ON viagem
 FOR EACH ROW
 EXECUTE PROCEDURE check_viagem_overlapping();

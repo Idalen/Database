@@ -339,7 +339,7 @@ INSERT INTO viagem
     (
         12345678916,
         'GRUPO DO DIOGO',
-        '2021-03-20', '2021-04-01',
+        '2021-12-01', '2021-12-31',
         'ANGOLA',
         'ITALIA'
     );
@@ -357,12 +357,21 @@ INSERT INTO passeio
     ),
     (
         DEFAULT,
-        '2021-03-30',
+        '2021-12-12',
         12345678916,
         'GRUPO DO DIOGO',
         12345678911,
         'NATALIA',
         60
+    ),
+    (
+        DEFAULT, -- id
+        '2021-05-15', -- data
+        12345678919, -- admin grupo
+        'GRUPO DO FRED', -- nome grupo
+        12345678910, -- parque
+        'MARIA',
+        120
     );
 
 -- insercao de dados idiomas_guias
