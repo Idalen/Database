@@ -148,8 +148,8 @@ INSERT INTO quarto
     (
         12345678914, -- documento do hotel (FK)(PK)
         1, -- número do quarto (PK)
-        2 -- ,
-        250.00número de vagas 
+        2, -- ,
+        250.00 --número de vagas 
     ),
     (
         12345678914,
