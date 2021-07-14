@@ -106,6 +106,7 @@ CREATE TABLE quarto(
 	hotel NUMERIC(11, 0),
 	numero INTEGER CHECK(numero > 0), --O numero do quarto não pode ser 0 ou negativo 
 	vagas INTEGER CHECK(vagas > 0),
+	diaria NUMERIC(7, 2) CHECK(diaria >= 0),
 	CONSTRAINT fk_hotel FOREIGN KEY(hotel) REFERENCES hotel(documento) ON DELETE CASCADE,
 	CONSTRAINT pk_quarto PRIMARY KEY(hotel, numero)
 );
