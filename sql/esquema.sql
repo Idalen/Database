@@ -310,7 +310,12 @@ EXECUTE PROCEDURE add_admin_as_participant();
 CREATE FUNCTION check_viagem_overlapping() RETURNS trigger AS
 $BODY$
 BEGIN
-	if (NEW.data_inicio < OLD.data_fim) OR (NEW.data_fim > OLD.data_inicio) then
+	if ((NEW.data_inicio < data_fim) 
+	OR (NEW.data_fim > data_inicio)) 
+	AND
+	(NEW.admin_grupo = admin_grupo 
+	AND NEW.nome_grupo = nome_grupo)
+	then
 		raise exception 'ERRO: existe uma viagem marcada neste período';
 	end if;
 	RETURN NEW;
