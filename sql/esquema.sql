@@ -88,8 +88,8 @@ CREATE TABLE hotel(
 	documento NUMERIC(11, 0) PRIMARY KEY,
 	parque NUMERIC(11, 0) NOT NULL,
 	nome VARCHAR(30),
-	total_quartos INTEGER CHECK (total_quartos >= 0), -- total de quartos nao pode ser negativo
-	total_vagas INTEGER CHECK (total_quartos <= total_vagas), --sempre ha, no minimo, uma vaga, ocupada ou não, para cada quarto
+	total_quartos INTEGER DEFAULT 0 CHECK (total_quartos >= 0), -- total de quartos nao pode ser negativo
+	total_vagas INTEGER DEFAULT 0 CHECK (total_quartos <= total_vagas), --sempre ha, no minimo, uma vaga, ocupada ou não, para cada quarto
 	CONSTRAINT fk_parque FOREIGN KEY(parque) REFERENCES parque_tematico(documento) ON DELETE CASCADE
 );
 
@@ -223,7 +223,6 @@ CREATE TABLE atracao(
 	parque NUMERIC(11, 0),
 	nome VARCHAR(30),
 	tipo VARCHAR(30),
-	-- tem que ter disponibilidade aqui, mas n sei oq significa
 	capacidade INTEGER CHECK (capacidade > 0), -- capacidade precisa ser positiva
 	CONSTRAINT fk_parque FOREIGN KEY(parque) REFERENCES parque_tematico(documento) ON DELETE CASCADE,
 	CONSTRAINT pk_atracao PRIMARY KEY(parque, nome)
@@ -307,3 +306,20 @@ AFTER INSERT
 ON grupo_turistas
 FOR EACH ROW
 EXECUTE PROCEDURE add_admin_as_participant();
+
+CREATE FUNCTION check_viagem_overlapping() RETURNS trigger AS
+$BODY$
+BEGIN
+	if (NEW.data_inicio < OLD.data_fim) OR (NEW.data_fim > OLD.data_inicio) then
+		raise exception 'ERRO: existe uma viagem marcada neste período';
+	end if;
+	RETURN NEW;
+END
+$BODY$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER viagem_overlapping
+AFTER INSERT
+ON viagem
+FOR EACH ROW
+EXECUTE PROCEDURE check_viagem_overlapping();
