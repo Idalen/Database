@@ -329,3 +329,27 @@ BEFORE INSERT
 ON viagem
 FOR EACH ROW
 EXECUTE PROCEDURE check_viagem_overlapping();
+
+
+
+CREATE FUNCTION check_evento_consistency() RETURNS trigger AS
+$BODY$
+DECLARE
+	parque_passeio NUMERIC(11, 0);
+BEGIN
+	SELECT parque FROM passeio WHERE NEW.passeio = id INTO parque_passeio;
+	IF parque_passeio != NEW.parque_atracao THEN
+		raise exception 'Passeio em parque diferente que atracao em um evento';
+	END IF;
+	RETURN NEW;
+END
+$BODY$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER evento_consistency
+BEFORE INSERT
+ON evento
+FOR EACH ROW
+EXECUTE PROCEDURE check_evento_consistency();
+
+-- PARQUE - PASSEIO - ATRAÇao
