@@ -248,7 +248,6 @@ CREATE TABLE restricoes_atracao(
     CONSTRAINT pk_restricoes_atracao PRIMARY KEY(parque_atracao, nome_atracao, restricao)
 );
 
-
 CREATE FUNCTION update_hotel() RETURNS trigger AS
 $BODY$
 BEGIN
@@ -290,3 +289,20 @@ FOR EACH ROW
 EXECUTE PROCEDURE check_duration();
 
 -- TRIGGER: criação do grupo, administrador é adicionado automaticamente.
+CREATE FUNCTION add_admin_as_participant() RETURNS trigger AS
+$BODY$
+DECLARE
+	d record;
+BEGIN
+	INSERT INTO participacao
+		VALUES(NEW.admin, NEW.admin, NEW.nome_grupo);
+	RETURN NEW;
+END
+$BODY$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER add_admin_as_participant_trigger
+AFTER INSERT
+ON grupo_turistas
+FOR EACH ROW
+EXECUTE PROCEDURE add_admin_as_participant();

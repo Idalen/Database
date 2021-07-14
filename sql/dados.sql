@@ -310,19 +310,9 @@ INSERT INTO grupo_turistas
 INSERT INTO participacao
     VALUES
     (
-        12345678919, -- passaporte turista (FK)(PK)
+        12345678918, -- passaporte turista (FK)(PK)
         12345678919, -- passaporte administrador do grupo (FK)(PK)
         'GRUPO DO FRED' -- nome do grupo (FK)(PK)
-    ),
-    (
-        12345678918,
-        12345678919,
-        'GRUPO DO FRED'
-    ),
-    (
-        12345678916,
-        12345678916,
-        'GRUPO DO DIOGO'
     ),
     (
         12345678917,
