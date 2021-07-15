@@ -44,3 +44,19 @@ WHERE q.vagas >= 2 AND q.diaria <= 400.00;
 
 -- 3ª consulta :
 
+SELECT
+    restaurante.documento,
+    restaurante.nome,
+    AVG(a.nota)::NUMERIC(2,1)
+FROM(
+    SELECT r.documento, p.nome AS parque, r.nome AS nome
+    FROM parque_tematico p
+    INNER JOIN restaurante r
+        ON p.documento = r.parque
+    WHERE p.pais = 'ARGENTINA'
+)restaurante LEFT OUTER JOIN avaliacao a
+    ON a.restaurante = restaurante.documento
+GROUP BY 
+    restaurante.documento,
+    restaurante.nome;
+

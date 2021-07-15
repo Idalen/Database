@@ -378,8 +378,8 @@ INSERT INTO passeio
 INSERT INTO idiomas_guia
     VALUES 
     (
-        1,
-        'FRANCES'
+        1,  -- id passeio (fk)(pk)
+        'FRANCES' -- idiomas (pk)
     ),
     (
         1,
@@ -393,10 +393,10 @@ INSERT INTO idiomas_guia
 INSERT INTO atracao
     VALUES
     (
-        12345678910,
-        'RODA GIGANTE',
-        FALSE,
-        40
+        12345678910, -- documneto do parque (fk) (pk)
+        'RODA GIGANTE', -- nome da atracao (pk)
+        FALSE, -- tipo da atracao
+        40      -- capacidade
     ),
     (
         12345678911,
@@ -420,10 +420,10 @@ INSERT INTO atracao
 INSERT INTO evento
     VALUES
     (
-        1,
-        12345678910,
-        'CINEMA',
-        '123456'
+        1, -- id do passeio (fk)
+        12345678910, -- atracao (fk) (pk)
+        'CINEMA', -- nome da atracao (pk)
+        '123456'  -- ingresso
     ),
     (
         2,
@@ -435,9 +435,9 @@ INSERT INTO evento
 INSERT INTO restricoes_atracao
     VALUES
     (
-        12345678910,
-        'RODA GIGANTE',
-        'IDADE MINIMA 13'
+        12345678910, -- parque atracao (pk)
+        'RODA GIGANTE', -- nome atracao (fk)
+        'IDADE MINIMA 13' -- restricao
     ),
     (
         12345678911,
