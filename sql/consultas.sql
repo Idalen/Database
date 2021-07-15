@@ -47,16 +47,29 @@ WHERE q.vagas >= 2 AND q.diaria <= 400.00;
 SELECT
     restaurante.documento,
     restaurante.nome,
+    restaurante.tipo_cozinha,
     AVG(a.nota)::NUMERIC(2,1)
 FROM(
-    SELECT r.documento, p.nome AS parque, r.nome AS nome
-    FROM parque_tematico p
-    INNER JOIN restaurante r
-        ON p.documento = r.parque
-    WHERE p.pais = 'ARGENTINA'
+    SELECT 
+    rest_by_pais.documento, rest_by_pais.nome, rest_by_pais.parque, c.tipo_cozinha
+    FROM(
+        SELECT r.documento, p.nome AS parque, r.nome AS nome
+        FROM parque_tematico p
+        INNER JOIN restaurante r
+            ON p.documento = r.parque
+        WHERE p.pais = 'ANGOLA'
+    )rest_by_pais INNER JOIN cozinha c
+        ON rest_by_pais.documento = c.restaurante
+    WHERE c.tipo_cozinha = 'JAPONESA'
 )restaurante LEFT OUTER JOIN avaliacao a
     ON a.restaurante = restaurante.documento
 GROUP BY 
     restaurante.documento,
-    restaurante.nome;
+    restaurante.nome, 
+    restaurante.tipo_cozinha;
+
+
+
+
+    
 
