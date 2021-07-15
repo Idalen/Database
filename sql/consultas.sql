@@ -52,6 +52,7 @@ RIGHT OUTER JOIN turista t
 ORDER BY t.nome;
 
 -- 3ª consulta:
+-- Consulta a média das avaliações de restaurantes filtradas pelo pais e pelo tipo de cozinha,
 
 SELECT
     restaurante.documento,
@@ -66,17 +67,18 @@ FROM(
         FROM parque_tematico p
         INNER JOIN restaurante r
             ON p.documento = r.parque
-        WHERE p.pais = 'ANGOLA'
+        WHERE p.pais = 'ARGENTINA'
     )rest_by_pais INNER JOIN cozinha c
         ON rest_by_pais.documento = c.restaurante
-    WHERE c.tipo_cozinha = 'JAPONESA'
+    WHERE c.tipo_cozinha = 'ITALIANA'
 )restaurante LEFT OUTER JOIN avaliacao a
     ON a.restaurante = restaurante.documento
 GROUP BY 
     restaurante.documento,
     restaurante.nome, 
     restaurante.tipo_cozinha;
-
+ORDER BY
+    
 
 
 

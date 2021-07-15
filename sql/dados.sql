@@ -39,6 +39,20 @@ INSERT INTO parque_tematico
         '09:00:00','12:00:00',
         '09:00:00','12:00:00',
         '08:00:00','22:00:00'
+        ),
+        (
+        12345678913, -- documento do parque temático (PK)
+        'ANGOLA', -- nome do país (FK)
+        'PARQUE DANIBOY', -- nome do parque
+        450.0, -- preço do ingresso
+        1000, -- lotação máxima
+        '08:00:00','22:00:00', -- horário de funcionamento (abertura, fechamento) no domingo
+        '09:00:00','12:00:00', -- horário de funcionamento (abertura, fechamento) na segunda
+        '09:00:00','12:00:00', -- horário de funcionamento (abertura, fechamento) na terça
+        '09:00:00','12:00:00', -- horário de funcionamento (abertura, fechamento) na quarta
+        '09:00:00','12:00:00', -- horário de funcionamento (abertura, fechamento) na quinta
+        '09:00:00','12:00:00', -- horário de funcionamento (abertura, fechamento) na sexta
+        '08:00:00','22:00:00'  -- horário de funcionamento (abertura, fechamento) no sábado
         );
 
 
@@ -49,6 +63,19 @@ INSERT INTO restaurante
         12345678912, -- documento do restaurante (PK)
         12345678911, -- documento do parque (FK)
         'RESTAURANTE DO DIOGO', -- nome do restaurante
+        numrange(100, 500, '[)'),-- faixa de preço,
+        '08:00:00','21:00:00', -- horário de funcionamento (abertura, fechamento) no domingo
+        '09:00:00','12:00:00', -- horário de funcionamento (abertura, fechamento) na segunda
+        '10:00:00','15:00:00', -- horário de funcionamento (abertura, fechamento) na terça
+        '09:00:00','12:00:00', -- horário de funcionamento (abertura, fechamento) na quarta
+        '08:00:00','19:00:00', -- horário de funcionamento (abertura, fechamento) na quinta
+        '09:00:00','12:00:00', -- horário de funcionamento (abertura, fechamento) na sexta
+        '08:00:00','22:00:00'  -- horário de funcionamento (abertura, fechamento) no sábado
+    ),
+    (
+        12345678915, -- documento do restaurante (PK)
+        12345678911, -- documento do parque (FK)
+        'RESTAURANTE DO FREDERICO', -- nome do restaurante
         numrange(100, 500, '[)'),-- faixa de preço,
         '08:00:00','21:00:00', -- horário de funcionamento (abertura, fechamento) no domingo
         '09:00:00','12:00:00', -- horário de funcionamento (abertura, fechamento) na segunda
@@ -70,11 +97,43 @@ INSERT INTO restaurante
         '08:00:00','19:00:00',
         '09:00:00','12:00:00',
         '08:00:00','22:00:00'
+    ),
+    (
+        12345678914,
+        12345678913,
+        'RESTAURANTE DA DAN',
+        numrange(100, 500, '[)'),
+        '08:00:00','21:00:00',
+        '09:00:00','12:00:00',
+        '10:00:00','15:00:00',
+        '09:00:00','12:00:00',
+        '08:00:00','19:00:00',
+        '09:00:00','12:00:00',
+        '08:00:00','22:00:00'
     );
 
 -- Tabela COZINHA
 INSERT INTO cozinha 
     VALUES
+    (
+        12345678915, -- documento do restaurante (FK)(PK)
+        'FRANCESA' -- cozinha (PK)
+    ),
+    (
+        12345678915,
+        'ALEMA'
+    ),(
+        12345678914, -- documento do restaurante (FK)(PK)
+        'BRASILEIRA' -- cozinha (PK)
+    ),
+    (
+        12345678914,
+        'JAPONESA'
+    ),
+    (
+        12345678914, -- documento do restaurante (FK)(PK)
+        'AMERICANA' -- cozinha (PK)
+    ),
     (
         12345678912, -- documento do restaurante (FK)(PK)
         'FRANCESA' -- cozinha (PK)
@@ -82,6 +141,14 @@ INSERT INTO cozinha
     (
         12345678912,
         'ITALIANA'
+    ),
+    (
+        12345678912, -- documento do restaurante (FK)(PK)
+        'AMERICANA' -- cozinha (PK)
+    ),
+    (
+        12345678913,
+        'AMERICANA'
     ),
     (
         12345678913,
@@ -107,6 +174,13 @@ INSERT INTO hotel
         0 -- total de vagas
     ),
     (
+        12345678916, -- documento do hotel (PK)
+        12345678911, -- documento do parque (FK)
+        'HOTEL DO FRECONHA', -- nome do hotel
+        0, -- total de quartos
+        0 -- total de vagas
+    ),
+    (
         12345678915,
         12345678910,
         'HOTEL DA MADU',
@@ -118,6 +192,17 @@ INSERT INTO hotel
 INSERT INTO servico_hotel
     VALUES
     (
+        12345678916, -- documento do hotel (FK)(PK)
+        'LAVANDERIA' -- nome do serviço (PK) 
+    ),
+    (
+        12345678916,
+        'ACADEMIA'
+    ),
+    (
+        12345678916,
+        'DESJEJUM'
+    ),(
         12345678914, -- documento do hotel (FK)(PK)
         'LAVANDERIA' -- nome do serviço (PK) 
     ),
