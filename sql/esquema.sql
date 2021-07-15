@@ -330,7 +330,6 @@ FOR EACH ROW
 EXECUTE PROCEDURE check_viagem_overlapping();
 
 
-
 CREATE FUNCTION check_evento_consistency() RETURNS trigger AS
 $BODY$
 DECLARE
@@ -351,4 +350,24 @@ ON evento
 FOR EACH ROW
 EXECUTE PROCEDURE check_evento_consistency();
 
--- PARQUE - PASSEIO - ATRAÇao
+CREATE FUNCTION check_quarto_capacity() RETURNS trigger AS
+$BODY$
+DECLARE
+	qtde INTEGER;
+	capacidade INTEGER;
+BEGIN
+	SELECT COUNT(quarto) FROM hospedagem WHERE quarto = NEW.quarto AND hotel = NEW.hotel INTO qtde;
+	SELECT vagas FROM quarto WHERE quarto = NEW.quarto AND hotel = NEW.hotel into capacidade;
+	IF qtde > capacidade THEN
+		raise exception 'O quarto está cheio';
+	END IF; 	
+	RETURN NEW;
+END
+$BODY$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER quarto_capacity
+BEFORE INSERT
+ON hospedagem
+FOR EACH ROW
+EXECUTE PROCEDURE check_quarto_capacity();
