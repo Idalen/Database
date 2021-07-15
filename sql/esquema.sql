@@ -111,7 +111,6 @@ CREATE TABLE quarto(
 	CONSTRAINT pk_quarto PRIMARY KEY(hotel, numero)
 );
 
-
 -- Criando tabela do Turista
 CREATE TABLE turista(
 	passaporte NUMERIC(11, 0) PRIMARY KEY CHECK(passaporte > 0),
@@ -128,7 +127,6 @@ CREATE TABLE restricoes_alimentares(
 	CONSTRAINT pk_restricoes_alimentares PRIMARY KEY(turista, restricao)
 );
 
-
 -- Criando tabela de Necessidades Especiais do Turista
 CREATE TABLE necessidades_especiais(
 	turista NUMERIC(11, 0),
@@ -136,7 +134,6 @@ CREATE TABLE necessidades_especiais(
 	CONSTRAINT fk_turista FOREIGN KEY(turista) REFERENCES turista(passaporte) ON DELETE CASCADE,
 	CONSTRAINT pk_necessidades_especiais PRIMARY KEY(turista, necessidade)
 );
-
 
 -- Criando tabela da Avaliação
 CREATE TABLE avaliacao(
@@ -177,7 +174,6 @@ CREATE TABLE participacao(
 	CONSTRAINT pk_participacao PRIMARY KEY(turista, admin_grupo, nome_grupo)
 );
 
-
 -- Criando tabela da Viagem
 CREATE TABLE viagem(
 	admin_grupo NUMERIC(11, 0),
@@ -192,8 +188,6 @@ CREATE TABLE viagem(
 	CONSTRAINT fk_pais_destino FOREIGN KEY(pais_destino) REFERENCES pais(nome_pais) ON DELETE CASCADE, 
 	CONSTRAINT pk_viagem PRIMARY KEY(admin_grupo, nome_grupo, data_inicio, data_fim)
 );
-
-
 
 -- Criando tabela do Passeio
 CREATE TABLE passeio(
@@ -280,7 +274,6 @@ END
 $BODY$
 LANGUAGE plpgsql;
 
-
 CREATE TRIGGER check_duration_trigger
 BEFORE INSERT 
 ON passeio
@@ -329,7 +322,6 @@ ON viagem
 FOR EACH ROW
 EXECUTE PROCEDURE check_viagem_overlapping();
 
-
 CREATE FUNCTION check_evento_consistency() RETURNS trigger AS
 $BODY$
 DECLARE
@@ -371,7 +363,6 @@ BEFORE INSERT
 ON hospedagem
 FOR EACH ROW
 EXECUTE PROCEDURE check_quarto_capacity();
-
 
 CREATE FUNCTION update_hotel_after_delete() RETURNS trigger AS
 $BODY$

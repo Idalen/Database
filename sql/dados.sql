@@ -1,21 +1,20 @@
--- Inserção de dados no banco de dados, com no mínimo 2 tuplas por tabela.
+-- Inserção de dados no banco de dados, com no mínimo 3 tuplas por tabela.
 
--- Tabela PAIS
+-- Tabela PAÍS
 INSERT INTO pais
     VALUES 
-    ('ARGENTINA'), -- nome do país (PK)
+    ('ARGENTINA'), -- nome (PK)
     ('ANGOLA'),
     ('JAPAO'),
     ('BRASIL'),
     ('ITALIA');
 
-
--- Tabela PARQUE TEMATICO
+-- Tabela PARQUE TEMÁTICO
 INSERT INTO parque_tematico  
     VALUES(
-        12345678911, -- documento do parque temático (PK)
-        'ARGENTINA', -- nome do país (FK)
-        'PARQUE DIDI', -- nome do parque
+        12345678911, -- documento (PK)
+        'ARGENTINA', -- país (FK)
+        'PARQUE DIDI', -- nome
         150.0, -- preço do ingresso
         700, -- lotação máxima
         '08:00:00','22:00:00', -- horário de funcionamento (abertura, fechamento) no domingo
@@ -41,28 +40,27 @@ INSERT INTO parque_tematico
         '08:00:00','22:00:00'
         ),
         (
-        12345678913, -- documento do parque temático (PK)
-        'ANGOLA', -- nome do país (FK)
-        'PARQUE DANIBOY', -- nome do parque
-        450.0, -- preço do ingresso
-        1000, -- lotação máxima
-        '08:00:00','22:00:00', -- horário de funcionamento (abertura, fechamento) no domingo
-        '09:00:00','12:00:00', -- horário de funcionamento (abertura, fechamento) na segunda
-        '09:00:00','12:00:00', -- horário de funcionamento (abertura, fechamento) na terça
-        '09:00:00','12:00:00', -- horário de funcionamento (abertura, fechamento) na quarta
-        '09:00:00','12:00:00', -- horário de funcionamento (abertura, fechamento) na quinta
-        '09:00:00','12:00:00', -- horário de funcionamento (abertura, fechamento) na sexta
-        '08:00:00','22:00:00'  -- horário de funcionamento (abertura, fechamento) no sábado
+        12345678913,
+        'ANGOLA',
+        'PARQUE DANIBOY',
+        450.0,
+        1000,
+        '08:00:00','22:00:00',
+        '09:00:00','12:00:00',
+        '09:00:00','12:00:00',
+        '09:00:00','12:00:00',
+        '09:00:00','12:00:00',
+        '09:00:00','12:00:00',
+        '08:00:00','22:00:00' 
         );
-
 
 -- Tabela RESTAURANTE
 INSERT INTO restaurante
     VALUES
     (
-        12345678912, -- documento do restaurante (PK)
-        12345678911, -- documento do parque (FK)
-        'RESTAURANTE DO DIOGO', -- nome do restaurante
+        12345678912, -- documento (PK)
+        12345678911, -- parque (FK)
+        'RESTAURANTE DO DIOGO', -- nome
         numrange(100, 500, '[)'),-- faixa de preço,
         '08:00:00','21:00:00', -- horário de funcionamento (abertura, fechamento) no domingo
         '09:00:00','12:00:00', -- horário de funcionamento (abertura, fechamento) na segunda
@@ -73,17 +71,17 @@ INSERT INTO restaurante
         '08:00:00','22:00:00'  -- horário de funcionamento (abertura, fechamento) no sábado
     ),
     (
-        12345678915, -- documento do restaurante (PK)
-        12345678911, -- documento do parque (FK)
-        'RESTAURANTE DO FREDERICO', -- nome do restaurante
-        numrange(100, 500, '[)'),-- faixa de preço,
-        '08:00:00','21:00:00', -- horário de funcionamento (abertura, fechamento) no domingo
-        '09:00:00','12:00:00', -- horário de funcionamento (abertura, fechamento) na segunda
-        '10:00:00','15:00:00', -- horário de funcionamento (abertura, fechamento) na terça
-        '09:00:00','12:00:00', -- horário de funcionamento (abertura, fechamento) na quarta
-        '08:00:00','19:00:00', -- horário de funcionamento (abertura, fechamento) na quinta
-        '09:00:00','12:00:00', -- horário de funcionamento (abertura, fechamento) na sexta
-        '08:00:00','22:00:00'  -- horário de funcionamento (abertura, fechamento) no sábado
+        12345678915,
+        12345678911,
+        'RESTAURANTE DO FREDERICO',
+        numrange(100, 500, '[)')
+        '08:00:00','21:00:00',
+        '09:00:00','12:00:00',
+        '10:00:00','15:00:00',
+        '09:00:00','12:00:00',
+        '08:00:00','19:00:00',
+        '09:00:00','12:00:00',
+        '08:00:00','22:00:00' 
     ),
     (
         12345678913,
@@ -116,35 +114,35 @@ INSERT INTO restaurante
 INSERT INTO cozinha 
     VALUES
     (
-        12345678915, -- documento do restaurante (FK)(PK)
-        'FRANCESA' -- cozinha (PK)
+        12345678915, -- restaurante (FK)(PK)
+        'FRANCESA' -- nacionalidade (PK)
     ),
     (
         12345678915,
         'ALEMA'
     ),(
-        12345678914, -- documento do restaurante (FK)(PK)
-        'BRASILEIRA' -- cozinha (PK)
+        12345678914,
+        'BRASILEIRA'
     ),
     (
         12345678914,
         'JAPONESA'
     ),
     (
-        12345678914, -- documento do restaurante (FK)(PK)
-        'AMERICANA' -- cozinha (PK)
+        12345678914,
+        'AMERICANA'
     ),
     (
-        12345678912, -- documento do restaurante (FK)(PK)
-        'FRANCESA' -- cozinha (PK)
+        12345678912,
+        'FRANCESA'
     ),
     (
         12345678912,
         'ITALIANA'
     ),
     (
-        12345678912, -- documento do restaurante (FK)(PK)
-        'AMERICANA' -- cozinha (PK)
+        12345678912,
+        'AMERICANA'
     ),
     (
         12345678913,
@@ -167,18 +165,18 @@ INSERT INTO cozinha
 INSERT INTO hotel
     VALUES
     (
-        12345678914, -- documento do hotel (PK)
-        12345678911, -- documento do parque (FK)
-        'HOTEL DO DIOGO', -- nome do hotel
+        12345678914, -- documento (PK)
+        12345678911, -- parque (FK)
+        'HOTEL DO DIOGO', -- nome
         0, -- total de quartos
         0 -- total de vagas
     ),
     (
-        12345678916, -- documento do hotel (PK)
-        12345678911, -- documento do parque (FK)
-        'HOTEL DO FRECONHA', -- nome do hotel
-        0, -- total de quartos
-        0 -- total de vagas
+        12345678916,
+        12345678911,
+        'HOTEL DO FRECONHA',
+        0,
+        0
     ),
     (
         12345678915,
@@ -188,12 +186,12 @@ INSERT INTO hotel
         0
     );
 
--- Tabela SERVIÇO HOTEL
+-- Tabela SERVIÇO do HOTEL
 INSERT INTO servico_hotel
     VALUES
     (
-        12345678916, -- documento do hotel (FK)(PK)
-        'LAVANDERIA' -- nome do serviço (PK) 
+        12345678916, -- hotel (FK)(PK)
+        'LAVANDERIA' -- serviço (PK) 
     ),
     (
         12345678916,
@@ -203,8 +201,8 @@ INSERT INTO servico_hotel
         12345678916,
         'DESJEJUM'
     ),(
-        12345678914, -- documento do hotel (FK)(PK)
-        'LAVANDERIA' -- nome do serviço (PK) 
+        12345678914,
+        'LAVANDERIA'
     ),
     (
         12345678914,
@@ -231,10 +229,10 @@ INSERT INTO servico_hotel
 INSERT INTO quarto
     VALUES 
     (
-        12345678914, -- documento do hotel (FK)(PK)
-        1, -- número do quarto (PK)
-        2, -- número de vagas
-        250.00 -- preço diária 
+        12345678914, -- hotel (FK)(PK)
+        1, -- número (PK)
+        2, -- vagas
+        250.00 -- diária 
     ),
     (
         12345678914,
@@ -301,8 +299,8 @@ INSERT INTO quarto
 INSERT INTO turista
     VALUES
     (
-        12345678916, -- número do passaporte (PK)
-        'DIOGO', -- nome 
+        12345678916, -- passaporte (PK)
+        'DIOGO', -- nome
         '2000-03-27', -- data de nascimento
         '(16)999999999' -- telefone
     ),
@@ -325,8 +323,8 @@ INSERT INTO turista
         '(16)999999996'
     ),
     (
-        12345678920, 
-        'MARIA',  
+        12345678920,
+        'MARIA',
         '1993-03-27',
         '(16)999999999'
     ),
@@ -353,40 +351,60 @@ INSERT INTO turista
 INSERT INTO restricoes_alimentares
     VALUES
     (
-        12345678917, -- passaporte turista (FK)(PK)
-        'ALERGIA CAMARAO' -- descrição da restrição (PK)
-    ),
-    (
-        12345678917,
-        'CELIACA'
+        12345678917, -- turista (FK)(PK)
+        'ALERGIA CAMARAO' -- restrição (PK)
     ),
     (
         12345678918,
         'ALERGIA AMENDOIM'
     ),
     (
-        12345678918,
-        'VEGANO'
+        12345678920,
+        'CELIACA'
+    ),
+    (
+        12345678920,
+        'VEGANISMO'
+    ),
+    (
+        12345678922,
+        'DIABETES'
+    ),
+    (
+        12345678923,
+        'HIPOLACTASIA'
     );
 
 -- Tabela NECESSIDADES ESPECIAIS
 INSERT INTO necessidades_especiais
     VALUES
     (
-        12345678916, -- passaporte do turista (FK)(PK)
-        'CADEIRANTE' -- descrição da necessidade (PK)
+        12345678916, -- turista (FK)(PK)
+        'DEFICIENCIA FISICA' -- necessidade (PK)
     ),
     (
         12345678917,
-        'DEFICIENTE VISUAL'
+        'DEFICIENCIA VISUAL'
+    ),
+    (
+        12345678918,
+        'DEFICIENCIA AUDITIVA'
+    ),
+    (
+        12345678919,
+        'AUTISMO'
+    ),
+    (
+        12345678921,
+        'NANISMO'
     );
 
--- Tabela AVALIAÇÃO dos restaurantes
+-- Tabela AVALIAÇÃO do restaurante
 INSERT INTO avaliacao
     VALUES
     (
-        12345678916, -- passaporte do turista (FK)(PK)
-        12345678912, -- documento do restaurante (FK)(PK)
+        12345678916, -- turista (FK)(PK)
+        12345678912, -- restaurante (FK)(PK)
         5 -- nota
     ),
     (
@@ -402,7 +420,7 @@ INSERT INTO avaliacao
     (
         12345678917,
         12345678913,
-        4
+        null
     ),
     (
         12345678918,
@@ -422,17 +440,17 @@ INSERT INTO avaliacao
     (
         12345678918,
         12345678914,
-        4.5
+        null
     );
 
 -- Tabela HOSPEDAGEM
 INSERT INTO hospedagem
     VALUES 
     (
-        12345678918, -- passaporte do turista (FK)(PK)
-        12345678914, -- documento do hotel (FK)(PK)
-        3, -- número do quarto (PK)
-        '[2021-05-06 13:00, 2021-05-07 10:00)' -- duração da estadia (PK)
+        12345678918, -- turista (FK)(PK)
+        12345678914, -- hotel (FK)(PK)
+        3, -- número do quarto (FK)(PK)
+        '[2021-05-06 13:00, 2021-05-07 10:00)' -- duração (PK)
 
     ),
     (
@@ -453,43 +471,74 @@ INSERT INTO hospedagem
         12345678915,
         1,
         '[2021-05-10 13:00, 2021-05-15 09:30)'
+    ),
+    (
+        12345678923,
+        12345678916,
+        1,
+        '[2021-05-30 18:00, 2021-06-30 18:00)'
     );
 
--- Tabela GRUPO DE TURISTAS
+-- Tabela GRUPO de TURISTAS
 INSERT INTO grupo_turistas
     VALUES
     (
-        12345678919, -- passaporte administrador do grupo (FK)(PK)
-        'GRUPO DO FRED' -- nome do grupo (PK)
+        12345678919, -- administrador (FK)(PK)
+        'GRUPO DO FRED' -- nome (FK)(PK)
     ),
     (
         12345678916,
         'GRUPO DO DIOGO'
+    ),
+    (
+        12345678923,
+        'GRUPO DO EUGENIO'
     );
 
--- Tabela de PARTICIPACAO de um turista em um grupo de turistas.
+-- Tabela PARTICIPACAO de um turista em um grupo
 -- OBS: Aqui é necessário adicionar o administrador do grupo como participante também. -- Trigger
 INSERT INTO participacao
     VALUES
     (
-        12345678918, -- passaporte turista (FK)(PK)
-        12345678919, -- passaporte administrador do grupo (FK)(PK)
-        'GRUPO DO FRED' -- nome do grupo (FK)(PK)
+        12345678918, -- turista (FK)(PK)
+        12345678919, -- administrador do grupo (FK)(PK)
+        'GRUPO DO FRED' -- grupo (FK)(PK)
+    ),
+    (
+        12345678923,
+        12345678919,
+        'GRUPO DO FRED'
     ),
     (
         12345678917,
         12345678916,
         'GRUPO DO DIOGO'
+    ),
+    (
+        12345678920,
+        12345678923,
+        'GRUPO DO EUGENIO'
+    ),
+    (
+        12345678921,
+        12345678923,
+        'GRUPO DO EUGENIO'
+    ),
+    (
+        12345678922,
+        12345678923,
+        'GRUPO DO EUGENIO'
     );
 
+-- Tabela VIAGEM
 INSERT INTO viagem
     VALUES
     (
-        12345678919, -- admin_grupo
-        'GRUPO DO FRED', -- nome_grupo
-        '2021-03-10' , '2021-05-20', -- duracao
-        'BRASIL', -- pais_origem
-        'JAPAO' -- pais_destino
+        12345678919, -- administrador do grupo (FK)(PK)
+        'GRUPO DO FRED', -- grupo (FK)(PK)
+        '2021-03-10' , '2021-05-20', -- duração (PK)
+        'BRASIL', -- origem
+        'JAPAO' -- destino
     ),
     (
         12345678916,
@@ -497,18 +546,33 @@ INSERT INTO viagem
         '2021-12-01', '2021-12-31',
         'ANGOLA',
         'ITALIA'
+    ),
+    (
+        12345678916,
+        'GRUPO DO DIOGO',
+        '2021-11-13', '2021-11-20',
+        'JAPAO',
+        'ANGOLA'
+    ),
+    (
+        12345678923,
+        'GRUPO DO EUGENIO',
+        '2021-05-30', '2021-06-30',
+        'ARGENTINA',
+        'BRASIL'
     );
 
+-- Tabela PASSEIO
 INSERT INTO passeio
     VALUES
     (
-        DEFAULT, -- id
-        '2021-05-19', -- data
-        12345678919, -- admin grupo
-        'GRUPO DO FRED', -- nome grupo
-        12345678910, -- parque
-        'MARIA',
-        120
+        DEFAULT, -- id (PK)
+        '2021-05-19', -- data (PK)
+        12345678919, -- administrador do grupo (FK)(PK)
+        'GRUPO DO FRED', -- grupo (FK)(PK)
+        12345678910, -- parque (FK)(PK)
+        'MARIA', -- nome do guia
+        120 -- preço do guia
     ),
     (
         DEFAULT,
@@ -520,21 +584,21 @@ INSERT INTO passeio
         60
     ),
     (
-        DEFAULT, -- id
-        '2021-05-15', -- data
-        12345678919, -- admin grupo
-        'GRUPO DO FRED', -- nome grupo
-        12345678910, -- parque
-        'MARIA',
-        120
+        DEFAULT,
+        '2021-06-15',
+        12345678923,
+        'GRUPO DO EUGENIO',
+        12345678913,
+        'ESMERINDO',
+        5
     );
 
--- insercao de dados idiomas_guias
+-- Tabela IDIOMAS do GUIA
 INSERT INTO idiomas_guia
     VALUES 
     (
-        1,  -- id passeio (fk)(pk)
-        'FRANCES' -- idiomas (pk)
+        1,  -- passeio (FK)(PK)
+        'FRANCES' -- idioma (PK)
     ),
     (
         1,
@@ -543,18 +607,27 @@ INSERT INTO idiomas_guia
     (
         2,
         'ESPANHOL'
+    ),
+    (
+        3,
+        'PORTUGUES'
+    ),
+    (
+        3,
+        'SUECO'
     );
 
+-- Tabela ATRAÇÃO
 INSERT INTO atracao
     VALUES
     (
-        12345678910, -- documneto do parque (fk) (pk)
-        'RODA GIGANTE', -- nome da atracao (pk)
-        FALSE, -- tipo da atracao
-        40      -- capacidade
+        12345678910, -- parque (FK)(PK)
+        'RODA GIGANTE', -- atração (PK)
+        FALSE, -- tipo (reservada ou não)
+        40  -- capacidade
     ),
     (
-        12345678911,
+        12345678910,
         'MONTANHA RUSSA',
         FALSE,
         50
@@ -570,14 +643,27 @@ INSERT INTO atracao
         'TEATRO',
         TRUE,
         50
+    ),
+    (
+        12345678913,
+        'BATE-BATE',
+        TRUE,
+        20
+    ),
+    (
+        12345678913,
+        'CAMINHAO MONSTRO',
+        TRUE,
+        500
     );
 
+-- Tabela EVENTO
 INSERT INTO evento
     VALUES
     (
-        1, -- id do passeio (fk)
-        12345678910, -- atracao (fk) (pk)
-        'CINEMA', -- nome da atracao (pk)
+        1, -- passeio (FK)(PK)
+        12345678910, -- parque (FK)(PK)
+        'CINEMA', -- atração (FK)(PK)
         '123456'  -- ingresso
     ),
     (
@@ -585,17 +671,51 @@ INSERT INTO evento
         12345678911,
         'TEATRO',
         '123457'
+    ),
+    (
+        3,
+        12345678913,
+        'BATE-BATE',
+        '114153'
+    ),
+    (
+        3,
+        12345678913,
+        'BATE-BATE',
+        '987654'
+    ),
+    (
+        3,
+        12345678913,
+        'CAMINHAO MONSTRO',
+        '314159'
     );
 
+-- Tabela RESTRIÇÕES da ATRAÇÃO
 INSERT INTO restricoes_atracao
     VALUES
     (
-        12345678910, -- parque atracao (pk)
-        'RODA GIGANTE', -- nome atracao (fk)
-        'IDADE MINIMA 13' -- restricao
+        12345678910, -- parque (FK)(PK)
+        'RODA GIGANTE', -- atração (FK)(PK)
+        'IDADE MINIMA 13' -- restrição (PK)
     ),
     (
         12345678911,
         'MONTANHA RUSSA',
         'ALTURA MINIMA 140'
+    ),
+    (
+        12345678911,
+        'TEATRO',
+        'OBRIGATORIO CAMISA'
+    ),
+    (
+        12345678913,
+        'BATE-BATE',
+        'IDADE MAXIMA 20'
+    ),
+    (
+        12345678913,
+        'CAMINHAO MONSTRO',
+        'IDADE MINIMA 18'
     );
