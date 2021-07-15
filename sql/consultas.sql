@@ -27,22 +27,31 @@ WHERE q.vagas >= 2 AND q.diaria <= 400.00;
 
 
 -- 2ª consulta:
--- Consulta hospedagens próximas do turista, com as informações necessárias,
+-- Consulta todas as hospedagens dos turistas, com as informações necessárias,
 -- sendo estas nome do hotel, número do quarto, número de vagas, 
--- quantas pessoas hospedadas e quanto o turista pagará.
--- Irá mostrar as hospedagens que iniciam num prazo de 1 semana.
---SELECT 
---FROM(
---    SELECT
---    FROM hospedagem 
---    LEFT JOIN turista
---        ON turista.passaporte=hospedagem.turista
---    WHERE 
---) near
+-- quantas pessoas hospedadas e quanto o turista pagará. Irá ordenar pelas estadias
+-- mais proximas
+SELECT 
+    t.nome AS turista, 
+    detail.hotel, 
+    detail.quarto, 
+    detail.vagas AS vagas,
+    detail.qnt AS hospedes,
+    TRUNC(detail.diaria/detail.qnt, 2) AS preço_a_pagar,
+    detail.duracao AS estadia
+FROM(
+    SELECT h.hotel, h.quarto, h.duracao, h.turista, q.vagas, q.diaria,
+    COUNT(h.turista) OVER(PARTITION BY h.hotel, h.quarto)AS qnt
+    FROM hospedagem h
+    INNER JOIN quarto q
+        ON h.hotel=q.hotel AND h.quarto = q.numero
+    ORDER BY lower(h.duracao) DESC
+) detail
+RIGHT OUTER JOIN turista t
+    ON detail.turista = t.passaporte
+ORDER BY t.nome;
 
-
-
--- 3ª consulta :
+-- 3ª consulta:
 
 SELECT
     restaurante.documento,

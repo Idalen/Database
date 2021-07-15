@@ -156,7 +156,6 @@ CREATE TABLE hospedagem(
 	duracao TSRANGE,
 	CONSTRAINT fk_turista FOREIGN KEY(turista) REFERENCES turista(passaporte) ON DELETE CASCADE,
 	CONSTRAINT fk_quarto FOREIGN KEY(quarto, hotel) REFERENCES quarto(numero, hotel) ON DELETE CASCADE,
-	--CONSTRAINT valid_hospedagem_timestamp CHECK (checkin < checkout),
 	CONSTRAINT pk_hospedagem PRIMARY KEY(turista, quarto, hotel, duracao)
 );
 

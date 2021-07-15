@@ -283,7 +283,14 @@ INSERT INTO hospedagem
     (
         12345678918, -- passaporte do turista (FK)(PK)
         12345678914, -- documento do hotel (FK)(PK)
-        2, -- número do quarto (PK)
+        3, -- número do quarto (PK)
+        '[2021-05-06 13:00, 2021-05-07 10:00)' -- duração da estadia (PK)
+
+    ),
+    (
+        12345678917, -- passaporte do turista (FK)(PK)
+        12345678914, -- documento do hotel (FK)(PK)
+        3, -- número do quarto (PK)
         '[2021-05-06 13:00, 2021-05-07 10:00)' -- duração da estadia (PK)
 
     ),
