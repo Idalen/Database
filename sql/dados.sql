@@ -233,8 +233,8 @@ INSERT INTO quarto
     (
         12345678914, -- documento do hotel (FK)(PK)
         1, -- número do quarto (PK)
-        2, -- ,
-        250.00 --número de vagas 
+        2, -- número de vagas
+        250.00 -- preço diária 
     ),
     (
         12345678914,
@@ -245,7 +245,7 @@ INSERT INTO quarto
     (
         12345678914, 
         3,
-        3,
+        2,
         250.00
     ),
     (
@@ -273,10 +273,10 @@ INSERT INTO quarto
         250.00
     ),
     (
-        12345678916, -- documento do hotel (FK)(PK)
-        1, -- número do quarto (PK)
-        2, -- ,
-        550.00 --número de vagas 
+        12345678916, 
+        1, 
+        2, 
+        550.00
     ),
     (
         12345678916,
@@ -325,10 +325,10 @@ INSERT INTO turista
         '(16)999999996'
     ),
     (
-        12345678920, -- número do passaporte (PK)
-        'MARIA', -- nome 
-        '1993-03-27', -- data de nascimento
-        '(16)999999999' -- telefone
+        12345678920, 
+        'MARIA',  
+        '1993-03-27',
+        '(16)999999999'
     ),
     (
         12345678921,
@@ -436,20 +436,20 @@ INSERT INTO hospedagem
 
     ),
     (
-        12345678917, -- passaporte do turista (FK)(PK)
-        12345678914, -- documento do hotel (FK)(PK)
-        3, -- número do quarto (PK)
-        '[2021-05-06 13:00, 2021-05-07 10:00)' -- duração da estadia (PK)
+        12345678917, 
+        12345678914, 
+        3, 
+        '[2021-05-06 13:00, 2021-05-07 10:00)' 
 
     ),
     (
-        12345678917, -- turista
+        12345678917,
         12345678915,
         2,
         '[2021-05-20 13:00, 2021-05-23 10:30)'
     ),
     (
-        12345678916, -- turista
+        12345678916,
         12345678915,
         1,
         '[2021-05-10 13:00, 2021-05-15 09:30)'

@@ -357,8 +357,8 @@ DECLARE
 	capacidade INTEGER;
 BEGIN
 	SELECT COUNT(quarto) FROM hospedagem WHERE quarto = NEW.quarto AND hotel = NEW.hotel INTO qtde;
-	SELECT vagas FROM quarto WHERE quarto = NEW.quarto AND hotel = NEW.hotel into capacidade;
-	IF qtde > capacidade THEN
+	SELECT vagas FROM quarto WHERE numero = NEW.quarto AND hotel = NEW.hotel into capacidade;
+	IF qtde = capacidade THEN
 		raise exception 'O quarto está cheio';
 	END IF; 	
 	RETURN NEW;
