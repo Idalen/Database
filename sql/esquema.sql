@@ -371,3 +371,21 @@ BEFORE INSERT
 ON hospedagem
 FOR EACH ROW
 EXECUTE PROCEDURE check_quarto_capacity();
+
+
+CREATE FUNCTION update_hotel_after_delete() RETURNS trigger AS
+$BODY$
+BEGIN
+  UPDATE hotel
+  SET total_quartos = total_quartos - 1, total_vagas = total_vagas-OLD.vagas
+  WHERE documento = NEW.hotel;
+  RETURN OLD;
+END
+$BODY$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER hotel_after_delete
+AFTER DELETE
+ON quarto
+FOR EACH ROW
+EXECUTE PROCEDURE update_hotel_after_delete();

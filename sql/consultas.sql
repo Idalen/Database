@@ -77,8 +77,8 @@ GROUP BY
     restaurante.documento,
     restaurante.nome, 
     restaurante.tipo_cozinha;
-ORDER BY
-    
+ORDER BY AVG(a.nota)
+
 
 
 
