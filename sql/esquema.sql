@@ -328,7 +328,7 @@ DECLARE
 	parque_passeio NUMERIC(11, 0);
 BEGIN
 	SELECT parque FROM passeio WHERE NEW.passeio = id INTO parque_passeio;
-	IF parque_passeio != NEW.parque_atracao THEN
+	IF parque_passeio <> NEW.parque_atracao THEN
 		raise exception 'Passeio em parque diferente que atracao em um evento';
 	END IF;
 	RETURN NEW;
@@ -380,3 +380,52 @@ AFTER DELETE
 ON quarto
 FOR EACH ROW
 EXECUTE PROCEDURE update_hotel_after_delete();
+
+-- CREATE FUNCTION check_grupo_viagem_overlap()RETURNS trigger AS
+-- $BODY$
+-- DECLARE
+-- 	membro record;
+-- BEGIN
+	
+-- 	SELECT admin, nome_grupo FROM(
+-- 		SELECT turistas FROM participacao p 
+-- 		WHERE p.admin_grupo = NEW.admin_grupo AND p.nome_grupo = NEW.nome_grupo
+-- 	) tur WHERE tur. turista
+
+-- END
+-- $BODY$
+-- LANGUAGE plpgsql;
+
+-- CREATE TRIGGER grupo_viagem_overlap
+-- BEFORE INSERT
+-- ON viagem
+-- FOR EACH ROW
+-- EXECUTE PROCEDURE check_grupo_viagem_overlap();
+
+
+CREATE FUNCTION check_passeio_same_pais_as_viagem() RETURNS trigger AS
+$BODY$
+DECLARE 
+	pais_viagem VARCHAR(30);
+	pais_parque VARCHAR(30);
+BEGIN
+  	SELECT pais_destino FROM viagem 
+  	WHERE admin_grupo = NEW.admin_grupo AND nome_grupo = NEW.nome_grupo AND NEW.data > data_chegada AND NEW.data < data_chegada
+  	INTO pais_viagem;
+
+	SELECT pais FROM parque_tematico p
+	WHERE p.documento = NEW.parque into pais_parque;
+
+	IF pais_parque != pais_viagem THEN
+		raise exception 'O passeio não ocorre no pais da viagem';
+
+	return NEW;
+END
+$BODY$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER passeio_same_pais_as_viagem
+BEFORE INSERT
+ON passeio
+FOR EACH ROW
+EXECUTE PROCEDURE check_passeio_same_pais_as_viagem();
