@@ -31,7 +31,80 @@ def inserir(passaporte, nome, data_nascimento, telefone=None):
             conn.close()
     return erro
 
-def consultar(pais='ARGENTINA'):
+def consultar_pais():
+    sql = """SELECT nome_pais FROM pais"""
+    conn = None
+    pais = []
+    try:
+        params = config()
+        conn = psycopg2.connect(**params)
+        cur = conn.cursor()
+        cur.execute(sql)
+        row = cur.fetchone()
+
+        while row is not None:
+            pais.append(row[0])
+            row = cur.fetchone()
+
+        cur.close()
+    except (Exception, psycopg2.DatabaseError) as error:
+        print(error)
+    finally:
+        if conn is not None:
+            conn.close()
+
+    return pais
+
+def consultar_cozinha():
+    sql = """SELECT DISTINCT tipo_cozinha FROM cozinha"""
+    conn = None
+    cozinha = []
+    try:
+        params = config()
+        conn = psycopg2.connect(**params)
+        cur = conn.cursor()
+        cur.execute(sql)
+        row = cur.fetchone()
+
+        while row is not None:
+            cozinha.append(row[0])
+            row = cur.fetchone()
+
+        cur.close()
+    except (Exception, psycopg2.DatabaseError) as error:
+        print(error)
+    finally:
+        if conn is not None:
+            conn.close()
+
+    return cozinha
+
+def consultar_parque(pais):
+    sql = """SELECT documento, nome FROM parque_tematico WHERE pais=%s"""
+
+    conn = None
+    parque = []
+    try:
+        params = config()
+        conn = psycopg2.connect(**params)
+        cur = conn.cursor()
+        cur.execute(sql, (pais,))
+        row = cur.fetchone()
+
+        while row is not None:
+            parque.append(row)
+            row = cur.fetchone()
+
+        cur.close()
+    except (Exception, psycopg2.DatabaseError) as error:
+        print(error)
+    finally:
+        if conn is not None:
+            conn.close()
+
+    return parque
+
+def consultar(parque, cozinha):
     sql= """SELECT
                 restaurante.documento,
                 restaurante.nome,
@@ -39,7 +112,7 @@ def consultar(pais='ARGENTINA'):
                 AVG(a.nota)::NUMERIC(2,1)
             FROM(
                 SELECT 
-                rest_by_pais.parque, rest_by_pais.nome, c.tipo_cozinha
+                rest_by_pais.parque, rest_by_pais.documento, rest_by_pais.nome, c.tipo_cozinha
                 FROM(
                     SELECT r.documento AS documento, p.nome AS parque, r.nome AS nome
                     FROM parque_tematico p
@@ -57,16 +130,17 @@ def consultar(pais='ARGENTINA'):
                 restaurante.tipo_cozinha
             ORDER BY AVG(a.nota);"""
     conn = None
+    avaliacao = []
     try:
         params = config()
         conn = psycopg2.connect(**params)
         cur = conn.cursor()
-        cur.execute(sql, (12345678911,'ITALIANA'))
+        cur.execute(sql, (parque,cozinha))
         print("The number of parts: ", cur.rowcount)
         row = cur.fetchone()
 
         while row is not None:
-            print(row)
+            avaliacao.append(row)
             row = cur.fetchone()
 
         cur.close()
@@ -75,3 +149,5 @@ def consultar(pais='ARGENTINA'):
     finally:
         if conn is not None:
             conn.close()
+
+    return avaliacao

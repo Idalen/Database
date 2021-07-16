@@ -247,6 +247,7 @@ CREATE TABLE restricoes_atracao(
     CONSTRAINT pk_restricoes_atracao PRIMARY KEY(parque_atracao, nome_atracao, restricao)
 );
 
+-- update vagas hotel
 CREATE FUNCTION update_hotel() RETURNS trigger AS
 $BODY$
 BEGIN
@@ -264,6 +265,7 @@ ON quarto
 FOR EACH ROW
 EXECUTE PROCEDURE update_hotel();
 
+-- checa se passeio esta no intervalo da viagem
 CREATE FUNCTION check_duration() RETURNS TRIGGER AS
 $BODY$
 DECLARE
@@ -291,6 +293,7 @@ ON passeio
 FOR EACH ROW
 EXECUTE PROCEDURE check_duration();
 
+
 -- TRIGGER: criação do grupo, administrador é adicionado automaticamente.
 CREATE FUNCTION add_admin_as_participant() RETURNS trigger AS
 $BODY$
@@ -310,6 +313,7 @@ ON grupo_turistas
 FOR EACH ROW
 EXECUTE PROCEDURE add_admin_as_participant();
 
+-- checa se ja existe viagem no espaço temporal da viagem nova
 CREATE FUNCTION check_viagem_overlapping() RETURNS trigger AS
 $BODY$
 DECLARE
@@ -333,7 +337,7 @@ ON viagem
 FOR EACH ROW
 EXECUTE PROCEDURE check_viagem_overlapping();
 
-
+-- checa se o passeio e a atracao acontecem no mesmo parque
 CREATE FUNCTION check_evento_consistency() RETURNS trigger AS
 $BODY$
 DECLARE
@@ -354,6 +358,7 @@ ON evento
 FOR EACH ROW
 EXECUTE PROCEDURE check_evento_consistency();
 
+-- checa a capacidade do quarto
 CREATE FUNCTION check_quarto_capacity() RETURNS trigger AS
 $BODY$
 DECLARE
@@ -376,7 +381,7 @@ ON hospedagem
 FOR EACH ROW
 EXECUTE PROCEDURE check_quarto_capacity();
 
-
+--update hotel
 CREATE FUNCTION update_hotel_after_delete() RETURNS trigger AS
 $BODY$
 BEGIN
@@ -394,6 +399,7 @@ ON quarto
 FOR EACH ROW
 EXECUTE PROCEDURE update_hotel_after_delete();
 
+-- checa se grupos de um unico turista colidem datas
 -- CREATE FUNCTION check_grupo_viagem_overlap()RETURNS trigger AS
 -- $BODY$
 -- DECLARE
@@ -415,7 +421,7 @@ EXECUTE PROCEDURE update_hotel_after_delete();
 -- FOR EACH ROW
 -- EXECUTE PROCEDURE check_grupo_viagem_overlap();
 
-
+-- checa se passeio acontece no mesmo pais que a viagem leva
 CREATE FUNCTION check_passeio_same_pais_as_viagem() RETURNS trigger AS
 $BODY$
 DECLARE 
@@ -442,3 +448,10 @@ BEFORE INSERT
 ON passeio
 FOR EACH ROW
 EXECUTE PROCEDURE check_passeio_same_pais_as_viagem();
+
+
+-- hospedagem deve ocorrer dentro do intervalo de tempo da viagem
+
+-- hotel da hospedagem deve ser o mesmo que o da viagem 
+
+-- quando hospedagem termina, vaga é liberada
