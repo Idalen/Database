@@ -165,16 +165,18 @@ HAVING COUNT(*) = 2;
 -----/ 5ª CONSULTA /-----
 --> Consulta todos os turistas participantes de todos os grupos de um administrador que não tem hospedagem marcada
 
-SELECT tur.turista FROM(
-    SELECT turista FROM grupo_turistas g -- todos turistas de todos os grupos de um admin
-    INNER JOIN participacao p 
-        ON g.nome_grupo = p.nome_grupo
-    WHERE g.admin='12345678923'
-) tur
-WHERE NOT EXISTS(
-    SELECT tur.turista FROM hospedagem h
-    WHERE tur.turista=h.turista
-);
+SELECT doc_turista.turista, turista.nome FROM(
+    SELECT turista FROM(
+        SELECT turista FROM grupo_turistas g -- todos turistas de todos os grupos de um admin
+        INNER JOIN participacao p 
+            ON g.nome_grupo = p.nome_grupo
+        WHERE g.admin='12345678923'
+    ) tur
+    WHERE NOT EXISTS(
+        SELECT tur.turista FROM hospedagem h
+        WHERE tur.turista=h.turista
+    )) doc_turista INNER JOIN turista
+        ON doc_turista.turista = turista.passaporte;
 
 
 
