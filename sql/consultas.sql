@@ -41,7 +41,7 @@ SELECT
     detail.duracao AS estadia
 FROM(
     SELECT h.hotel, h.quarto, h.duracao, h.turista, q.vagas, q.diaria,
-    COUNT(h.turista) OVER(PARTITION BY h.hotel, h.quarto)AS qnt
+    COUNT(h.turista) OVER(PARTITION BY h.hotel, h.quarto) AS qnt
     FROM hospedagem h
     INNER JOIN quarto q
         ON h.hotel=q.hotel AND h.quarto = q.numero
@@ -51,9 +51,9 @@ RIGHT OUTER JOIN turista t
     ON detail.turista = t.passaporte
 ORDER BY t.nome;
 
--- 3ª consulta:
--- Consulta a média das avaliações de restaurantes filtradas pelo pais e pelo tipo de cozinha,
 
+-- 3ª consulta:
+-- Consulta a média das avaliações de restaurantes filtradas pelo pais e pelo tipo de cozinha
 SELECT
     restaurante.documento,
     restaurante.nome,
@@ -76,11 +76,55 @@ FROM(
 GROUP BY 
     restaurante.documento,
     restaurante.nome, 
-    restaurante.tipo_cozinha;
-ORDER BY AVG(a.nota)
+    restaurante.tipo_cozinha
+ORDER BY AVG(a.nota);
+
+-- 4ª consulta (com divisão, eu acho)
+-- Consulta hoteis de um parque com o filtro de 2 serviços que o turista deseja.
+SELECT filtered_hoteis.nome
+FROM(
+    SELECT hoteis.nome, hoteis.documento
+    FROM (
+        SELECT h.documento, h.nome 
+        FROM hotel h
+        INNER JOIN parque_tematico p
+        ON h.parque = p.documento
+        WHERE p.nome = 'PARQUE DIDI'
+    ) hoteis
+    INNER JOIN servico_hotel s
+    ON hoteis.documento = s.hotel
+    WHERE s.servico='LAVANDERIA'
+) filtered_hoteis
+INNER JOIN servico_hotel s
+ON filtered_hoteis.documento = s.hotel
+WHERE s.servico='ACADEMIA';
 
 
+-- 5ª Consulta
+-- Checar pessoas do grupo do turista que ainda não estão hospedadas em algum hotel
+-- durante uma viagem definida.
+--SELECT grupo.turista, grupo.nome
+--FROM (
+--    SELECT t.nome AS turista, p.nome_grupo AS nome
+--    FROM turista t
+--    INNER JOIN participacao p
+--    ON t.passaporte = p.turista
+--) grupo
+--WHERE EXISTS
+--(
+--    SELECT part.turista, part.nome_grupo
+--    FROM (
+--        SELECT p.admin_grupo AS admin, p.nome_grupo AS nome
+--        FROM turista t
+--        INNER JOIN participacao p 
+--        ON t.passaporte=p.turista
+--        WHERE t.passaporte = 12345678918
+--    ) g
+--    INNER JOIN participacao part
+--    ON part.admin_grupo=g.admin AND part.nome_grupo=g.nome
+--);
+
+-- atrações livre e reservada
 
 
-    
 

@@ -262,13 +262,17 @@ CREATE FUNCTION check_duration() RETURNS TRIGGER AS
 $BODY$
 DECLARE
 	d record;
+	var boolean := true;
 BEGIN
-  	for d in select * from viagem where admin_grupo = NEW.admin_grupo AND nome_grupo = NEW.nome_grupo
-  	loop
-	if NEW.data NOT BETWEEN d.data_inicio AND d.data_fim then 
-		raise exception 'Passeio não ocorre no período da viagem';
+	for d in select * from viagem where admin_grupo = NEW.admin_grupo AND nome_grupo = NEW.nome_grupo
+	loop
+	if NEW.data BETWEEN d.data_inicio AND d.data_fim then 
+		var := true;
 	end if;
-  	end loop;
+  	if var = false then
+	  raise exception 'Passeio não ocorre no período da viagem';
+	end if;
+	end loop;
   	RETURN NEW;
 END
 $BODY$
@@ -410,7 +414,7 @@ DECLARE
 	pais_parque VARCHAR(30);
 BEGIN
   	SELECT pais_destino FROM viagem 
-  	WHERE admin_grupo = NEW.admin_grupo AND nome_grupo = NEW.nome_grupo AND NEW.data > data_chegada AND NEW.data < data_chegada
+  	WHERE admin_grupo = NEW.admin_grupo AND nome_grupo = NEW.nome_grupo AND NEW.data > data_inicio AND NEW.data < data_fim
   	INTO pais_viagem;
 
 	SELECT pais FROM parque_tematico p
@@ -418,7 +422,7 @@ BEGIN
 
 	IF pais_parque != pais_viagem THEN
 		raise exception 'O passeio não ocorre no pais da viagem';
-
+	END IF;
 	return NEW;
 END
 $BODY$

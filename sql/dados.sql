@@ -41,7 +41,7 @@ INSERT INTO parque_tematico
         ),
         (
         12345678913,
-        'ANGOLA',
+        'ITALIA',
         'PARQUE DANIBOY',
         450.0,
         1000,
@@ -74,7 +74,7 @@ INSERT INTO restaurante
         12345678915,
         12345678911,
         'RESTAURANTE DO FREDERICO',
-        numrange(100, 500, '[)')
+        numrange(100, 500, '[)'),
         '08:00:00','21:00:00',
         '09:00:00','12:00:00',
         '10:00:00','15:00:00',
@@ -420,7 +420,7 @@ INSERT INTO avaliacao
     (
         12345678917,
         12345678913,
-        null
+        4.7
     ),
     (
         12345678918,
@@ -440,7 +440,7 @@ INSERT INTO avaliacao
     (
         12345678918,
         12345678914,
-        null
+        1.5
     );
 
 -- Tabela HOSPEDAGEM
@@ -515,6 +515,11 @@ INSERT INTO participacao
         'GRUPO DO DIOGO'
     ),
     (
+        12345678918,
+        12345678916,
+        'GRUPO DO DIOGO'
+    ),
+    (
         12345678920,
         12345678923,
         'GRUPO DO EUGENIO'
@@ -538,28 +543,29 @@ INSERT INTO viagem
         'GRUPO DO FRED', -- grupo (FK)(PK)
         '2021-03-10' , '2021-05-20', -- duração (PK)
         'BRASIL', -- origem
-        'JAPAO' -- destino
+        'ANGOLA' -- destino
     ),
     (
         12345678916,
         'GRUPO DO DIOGO',
         '2021-12-01', '2021-12-31',
-        'ANGOLA',
-        'ITALIA'
+        'ITALIA',
+        'ARGENTINA'
+        
     ),
     (
         12345678916,
         'GRUPO DO DIOGO',
         '2021-11-13', '2021-11-20',
         'JAPAO',
-        'ANGOLA'
+        'ARGENTINA'
     ),
     (
         12345678923,
         'GRUPO DO EUGENIO',
         '2021-05-30', '2021-06-30',
-        'ARGENTINA',
-        'BRASIL'
+        'BRASIL',
+        'ITALIA'
     );
 
 -- Tabela PASSEIO
@@ -576,7 +582,7 @@ INSERT INTO passeio
     ),
     (
         DEFAULT,
-        '2021-12-12',
+        '2021-11-17',
         12345678916,
         'GRUPO DO DIOGO',
         12345678911,
@@ -652,6 +658,12 @@ INSERT INTO atracao
     ),
     (
         12345678913,
+        'APRESENTACAO',
+        TRUE,
+        100
+    ),
+    (
+        12345678913,
         'CAMINHAO MONSTRO',
         TRUE,
         500
@@ -681,7 +693,7 @@ INSERT INTO evento
     (
         3,
         12345678913,
-        'BATE-BATE',
+        'APRESENTACAO',
         '987654'
     ),
     (
@@ -700,7 +712,7 @@ INSERT INTO restricoes_atracao
         'IDADE MINIMA 13' -- restrição (PK)
     ),
     (
-        12345678911,
+        12345678910,
         'MONTANHA RUSSA',
         'ALTURA MINIMA 140'
     ),
