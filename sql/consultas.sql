@@ -1,65 +1,31 @@
 --------------------/ CONSULTAS /--------------------
 
 -----/ 1ª CONSULTA /-----
---/ Turista consulta todos quartos que existem em um parque específico 
+--/ Turista consulta todos quartos disponíveis que existem em um parque específico 
 --/ com base nos dias de checkin e checkout desejados e os filtros: 
---/     * valor da diária 
+--/     * valor da diária
 --/     * número de vagas
-
---SELECT available.nome_hotel, available.quarto, q.vagas,
---        q.diaria, 
---        q.diaria*(upper('[2021-07-05, 2021-07-07)'::tsrange) - lower('[2021-07-05, 2021-07-07)'::tsrange)) AS preço_total
---FROM
---(
---    SELECT hosp.quarto, hosp.hotel, hoteis.nome AS nome_hotel
---    FROM(
---        SELECT h.documento, h.nome AS nome
---        FROM parque_tematico p
---        INNER JOIN hotel h
---            ON p.documento = h.parque
---        WHERE p.documento = 12345678910
---    ) hoteis
---    INNER JOIN hospedagem hosp
---        ON hosp.hotel = hoteis.documento
---    WHERE NOT hosp.duracao && '[2021-07-05, 2021-07-07)'::tsrange
---) available 
---INNER JOIN
---quarto q
---    ON q.hotel = available.hotel AND q.numero = available.quarto
---
---WHERE q.vagas >= 2 AND q.diaria <= 400.00;
---;
---
-
---SELECT available.nome_hotel, available.quarto, q.vagas,
---        q.diaria, 
---        q.diaria*(upper('[2021-07-05, 2021-07-07)'::tsrange) - lower('[2021-07-05, 2021-07-07)'::tsrange)) AS preço_total
---FROM
---(
---    SELECT hoteis.quarto, hoteis.hotel, hoteis.nome AS nome_hotel
---    FROM(
---        SELECT h.documento, h.nome AS nome
---        FROM parque_tematico p
---        INNER JOIN hotel h
---            ON p.documento = h.parque
---        WHERE p.documento = 12345678910
---    ) hoteis
---    INNER JOIN quarto q
---        ON q.hotel = hoteis.hotel AND q.numero = hoteis.quarto
---) all
---INNER JOIN
---hospedagem hosp
---    ON all.hotel = available.hotel AND q.numero = available.quarto
---
---
---    hospedagem hosp
---        ON hosp.hotel = hoteis.documento
---    WHERE NOT hosp.duracao && '[2021-07-05, 2021-07-07)'::tsrange;
-
+SELECT h.nome AS nome_hotel, livres.numero AS numero_quarto 
+FROM (
+    SELECT q.hotel, q.numero
+    FROM quarto q
+    -- Seleciona todos os quartos que não tem hóspedes no período desejado
+    WHERE (q.hotel, q.numero) 
+    NOT IN
+    (
+        SELECT hotel, quarto
+        FROM hospedagem 
+        WHERE duracao && '[2021-05-21, 2021-05-22)'::tsrange -- Testando com este período (checkin, checkou)
+    ) 
+    -- Filtra por vagas e diaria
+    AND q.vagas >= 2 AND q.diaria <= 500 -- Testando com esse numero minimo de vagas e diaria máxima
+) livres
+INNER JOIN hotel h
+    ON livres.hotel = h.documento
+WHERE h.parque = 12345678910; -- Testando com PARQUE MADU
 -----/ FIM 1ª CONSULTA /-----
 
 
--- OK
 -----/ 2ª CONSULTA /-----
 --> Calcula o lucro total de um hotel específico em um dia definido, 
 --> assim como a quantidade de quartos sendo usados e a quantidade total de hóspedes.
@@ -72,11 +38,12 @@ FROM (
     -- e retorna a PK deste quarto (hotel e número) e o total de turistas hospedados
     SELECT DISTINCT 
         hosp.quarto, hosp.hotel,
-        COUNT(hosp.turista) OVER(PARTITION BY hosp.hotel, hosp.quarto) AS hospedes
+        COUNT(hosp.turista) AS hospedes
     FROM hotel h
     INNER JOIN hospedagem hosp
         ON h.documento = hosp.hotel
     WHERE h.documento=12345678915 AND '2021-05-21'::TIMESTAMP <@ hosp.duracao -- hotel da madu
+    GROUP BY hosp.hotel, hosp.quarto
 ) quartos
 INNER JOIN quarto q -- Feito um inner join para conseguir as diárias dos quartos
     ON quartos.hotel = q.hotel AND quartos.quarto = q.numero
@@ -84,7 +51,7 @@ GROUP BY q.hotel;
 
 -----/ FIM 2ª CONSULTA /-----
 
--- OK
+
 -----/ 3ª CONSULTA /-----
 --> Consulta a média das avaliações de restaurantes filtradas pelo parque especificado
 --> e pelo tipo de cozinha desejado
@@ -116,17 +83,14 @@ ORDER BY AVG(a.nota);
 -----/ FIM 3ª CONSULTA /-----
 
 
--- OK
 -----/ 4ª CONSULTA (COM DIVISÃO)/-----
---> Consulta os hoteis de um parque espeficiado com o filtro de 2 serviços que o turista deseja
+--> Consulta os hoteis de um parque especificado com o filtro de 2 serviços que o turista deseja
 --> que o hotel ofereça. Note que são necessários ambos serviços.
-
 SELECT filtered_hoteis.nome AS nome
 FROM(
-    -- Seleciona todos os hoteis que possuem o servico S1.
+    -- Seleciona todos os hoteis que tem algum dos serviços
     SELECT hoteis.nome, hoteis.documento
     FROM (
-        -- Seleciona todos os hoteis do parque especificado
         SELECT h.documento, h.nome 
         FROM hotel h
         INNER JOIN parque_tematico p
@@ -138,8 +102,12 @@ FROM(
     WHERE s.servico='LAVANDERIA' OR s.servico='ACADEMIA'
 ) filtered_hoteis
 GROUP BY filtered_hoteis.documento, filtered_hoteis.nome
+-- Seleciona apenas os que tem os dois serviços
 HAVING COUNT(*) = 2;
 
+-----/ FIM 4ª CONSULTA /-----
+
+-- ANTIGA FORMA USANDO JOIN
 --SELECT filtered_hoteis.nome AS hoteis
 --FROM(
 --    -- Seleciona todos os hoteis que possuem o servico S1.
@@ -160,27 +128,29 @@ HAVING COUNT(*) = 2;
 --ON filtered_hoteis.documento = s.hotel
 --WHERE s.servico='ACADEMIA';
 
------/ FIM 4ª CONSULTA /-----
+
 
 -----/ 5ª CONSULTA /-----
 --> Consulta todos os turistas participantes de todos os grupos de um administrador que não tem hospedagem marcada
 
-SELECT doc_turista.turista, turista.nome FROM(
+SELECT doc_turista.turista, turista.nome 
+FROM (
     SELECT turista FROM(
-        SELECT turista FROM grupo_turistas g -- todos turistas de todos os grupos de um admin
+        SELECT turista FROM grupo_turistas g -- Todos turistas de todos os grupos de um admin
         INNER JOIN participacao p 
             ON g.nome_grupo = p.nome_grupo
         WHERE g.admin='12345678923'
     ) tur
-    WHERE NOT EXISTS(
+    WHERE NOT EXISTS
+    (
         SELECT tur.turista FROM hospedagem h
         WHERE tur.turista=h.turista
-    )) doc_turista INNER JOIN turista
-        ON doc_turista.turista = turista.passaporte;
+    )
+) doc_turista INNER JOIN turista
+    ON doc_turista.turista = turista.passaporte;
 
 
 
--- OK
 -----/ 6ª CONSULTA /-----
 --> Consulta todas as atrações de um parque especificado que não tenha uma restrição específica. 
 
@@ -221,7 +191,6 @@ FROM (
     LIMIT 1
 ) proximo -- Passeio mais próximo da data definida
 INNER JOIN evento e
-    ON e.passeio = proximo.id
-;
+    ON e.passeio = proximo.id;
 
 -----/ FIM 7ª CONSULTA /-----
