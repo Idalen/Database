@@ -107,28 +107,6 @@ HAVING COUNT(*) = 2;
 
 -----/ FIM 4ª CONSULTA /-----
 
--- ANTIGA FORMA USANDO JOIN
---SELECT filtered_hoteis.nome AS hoteis
---FROM(
---    -- Seleciona todos os hoteis que possuem o servico S1.
---    SELECT hoteis.nome, hoteis.documento
---    FROM (
---        -- Seleciona todos os hoteis do parque especificado
---        SELECT h.documento, h.nome 
---        FROM hotel h
---        INNER JOIN parque_tematico p
---        ON h.parque = p.documento
---        WHERE p.documento = 12345678911 -- 'PARQUE DIDI'
---    ) hoteis 
---    INNER JOIN servico_hotel s
---    ON hoteis.documento = s.hotel
---    WHERE s.servico='LAVANDERIA'
---) filtered_hoteis
---INNER JOIN servico_hotel s -- Com o inner join, tem-se os hoteis com ambos serviços S1 e S2
---ON filtered_hoteis.documento = s.hotel
---WHERE s.servico='ACADEMIA';
-
-
 
 -----/ 5ª CONSULTA /-----
 --> Consulta todos os turistas participantes de todos os grupos de um administrador que não tem hospedagem marcada

@@ -111,7 +111,6 @@ CREATE TABLE quarto(
 	CONSTRAINT pk_quarto PRIMARY KEY(hotel, numero)
 );
 
-
 -- Criando tabela do Turista
 CREATE TABLE turista(
 	passaporte NUMERIC(11, 0) PRIMARY KEY CHECK(passaporte > 0),
@@ -128,7 +127,6 @@ CREATE TABLE restricoes_alimentares(
 	CONSTRAINT pk_restricoes_alimentares PRIMARY KEY(turista, restricao)
 );
 
-
 -- Criando tabela de Necessidades Especiais do Turista
 CREATE TABLE necessidades_especiais(
 	turista NUMERIC(11, 0),
@@ -136,7 +134,6 @@ CREATE TABLE necessidades_especiais(
 	CONSTRAINT fk_turista FOREIGN KEY(turista) REFERENCES turista(passaporte) ON DELETE CASCADE,
 	CONSTRAINT pk_necessidades_especiais PRIMARY KEY(turista, necessidade)
 );
-
 
 -- Criando tabela da Avaliação
 CREATE TABLE avaliacao(
@@ -177,7 +174,6 @@ CREATE TABLE participacao(
 	CONSTRAINT pk_participacao PRIMARY KEY(turista, admin_grupo, nome_grupo)
 );
 
-
 -- Criando tabela da Viagem
 CREATE TABLE viagem(
 	admin_grupo NUMERIC(11, 0),
@@ -192,8 +188,6 @@ CREATE TABLE viagem(
 	CONSTRAINT fk_pais_destino FOREIGN KEY(pais_destino) REFERENCES pais(nome_pais) ON DELETE CASCADE, 
 	CONSTRAINT pk_viagem PRIMARY KEY(admin_grupo, nome_grupo, data_inicio, data_fim)
 );
-
-
 
 -- Criando tabela do Passeio
 CREATE TABLE passeio(
@@ -247,7 +241,7 @@ CREATE TABLE restricoes_atracao(
     CONSTRAINT pk_restricoes_atracao PRIMARY KEY(parque_atracao, nome_atracao, restricao)
 );
 
--- update vagas hotel
+-- Update das vagas do hotel
 CREATE FUNCTION update_hotel() RETURNS trigger AS
 $BODY$
 BEGIN
@@ -265,7 +259,7 @@ ON quarto
 FOR EACH ROW
 EXECUTE PROCEDURE update_hotel();
 
--- checa se passeio esta no intervalo da viagem
+-- Checa se passeio esta no intervalo da viagem
 CREATE FUNCTION check_duration() RETURNS TRIGGER AS
 $BODY$
 DECLARE
@@ -286,13 +280,11 @@ END
 $BODY$
 LANGUAGE plpgsql;
 
-
 CREATE TRIGGER check_duration_trigger
 BEFORE INSERT 
 ON passeio
 FOR EACH ROW
 EXECUTE PROCEDURE check_duration();
-
 
 -- TRIGGER: criação do grupo, administrador é adicionado automaticamente.
 CREATE FUNCTION add_admin_as_participant() RETURNS trigger AS
@@ -381,7 +373,7 @@ ON hospedagem
 FOR EACH ROW
 EXECUTE PROCEDURE check_quarto_capacity();
 
---update hotel
+-- Update do hotel
 CREATE FUNCTION update_hotel_after_delete() RETURNS trigger AS
 $BODY$
 BEGIN
@@ -421,7 +413,7 @@ EXECUTE PROCEDURE update_hotel_after_delete();
 -- FOR EACH ROW
 -- EXECUTE PROCEDURE check_grupo_viagem_overlap();
 
--- checa se passeio acontece no mesmo pais que a viagem leva
+-- Checa se passeio acontece no mesmo pais que a viagem leva
 CREATE FUNCTION check_passeio_same_pais_as_viagem() RETURNS trigger AS
 $BODY$
 DECLARE 
