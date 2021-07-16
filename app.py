@@ -27,7 +27,7 @@ def print_format_line(elements):
     index = []
 
 
-user = 12345678900
+user = None
 user_name = None
 
 print("""
@@ -95,7 +95,6 @@ while True:
 
             restaurante = db.consultar_restaurante(parque_doc[p])
             restaurante_doc, restaurante_nome =  map(list,zip(*restaurante))
-            print(restaurante_doc)
             print_format_line(restaurante_nome)   
             r = int(input('Escolha o restaurante que voce quer avaliar:'))
             n = int(input('Escolha sua nota para o resturante (entre 0 e 5):'))      

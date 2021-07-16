@@ -163,51 +163,20 @@ HAVING COUNT(*) = 2;
 -----/ FIM 4ª CONSULTA /-----
 
 -----/ 5ª CONSULTA /-----
---> Checar pessoas do grupo do turista que ainda não estão hospedadas em algum hotel
---> durante uma viagem definida.
---SELECT nome
---FROM turista
---WHERE EXISTS (
---    SELECT
---    FROM participacao 
---    SELECT grupos.nome_grupo, grupos.admin_grupo
---    FROM (
---        SELECT p.admin_grupo, p.nome_grupo
---        FROM participacao p
---        INNER JOIN turista t
---            ON p.turista = t.passaporte 
---        WHERE t.nome='EUGENIO'
---    ) grupos 
---    INNER JOIN viagem v
---    ON grupos.admin_grupo=v.admin_grupo AND grupos.nome_grupo=v.nome_grupo
---    ORDER BY v.data_inicio ASC
---    LIMIT 1 -- VIAGEM MAIS PROXIMA
---    ;
---);
+--> Consulta todos os turistas participantes de todos os grupos de um administrador que não tem hospedagem marcada
+
+SELECT tur.turista FROM(
+    SELECT turista FROM grupo_turistas g -- todos turistas de todos os grupos de um admin
+    INNER JOIN participacao p 
+        ON g.nome_grupo = p.nome_grupo
+    WHERE g.admin='12345678923'
+) tur
+WHERE NOT EXISTS(
+    SELECT tur.turista FROM hospedagem h
+    WHERE tur.turista=h.turista
+);
 
 
---SELECT grupo.turista, grupo.nome
---FROM (
---    SELECT t.nome AS turista, p.nome_grupo AS nome
---    FROM turista t
---    INNER JOIN participacao p
---    ON t.passaporte = p.turista
---) grupo
---WHERE EXISTS
---(
---    SELECT part.turista, part.nome_grupo
---    FROM (
---        SELECT p.admin_grupo AS admin, p.nome_grupo AS nome
---        FROM turista t
---        INNER JOIN participacao p 
---        ON t.passaporte=p.turista
---        WHERE t.passaporte = 12345678918
---    ) g
---    INNER JOIN participacao part
---    ON part.admin_grupo=g.admin AND part.nome_grupo=g.nome
---);
-
------/ FIM 5ª CONSULTA /-----
 
 -- OK
 -----/ 6ª CONSULTA /-----
