@@ -4,6 +4,10 @@ import psycopg2
 from config import config
 from read_sql import read_sql
 
+"""Essa e a biblioteca onde estão as funcoes que conversam diretamente
+com a biblioteca psycopg2, que executa o sql embutido no python"""
+
+
 def inserir_turista(passaporte, nome, data_nascimento, telefone=None):
 
     sql = """INSERT INTO turista(passaporte,nome,data_nascimento,telefone)
@@ -11,17 +15,11 @@ def inserir_turista(passaporte, nome, data_nascimento, telefone=None):
     conn = None
     erro = 0
     try:
-        # read database configuration
         params = config()
-        # connect to the PostgreSQL database
         conn = psycopg2.connect(**params)
-        # create a new cursor
         cur = conn.cursor()
-        # execute the UPDATE  statement
         cur.execute(sql, (passaporte, nome.upper(), data_nascimento, telefone))
-        # get the number of updated rows
         conn.commit()
-        # Close communication with the PostgreSQL database
         cur.close()
     except (Exception, psycopg2.DatabaseError) as error:
         print("ERRO", error)
@@ -38,17 +36,11 @@ def inserir_avaliacao(passaporte, restaurante, nota):
     conn = None
     erro = 0
     try:
-        # read database configuration
         params = config()
-        # connect to the PostgreSQL database
         conn = psycopg2.connect(**params)
-        # create a new cursor
         cur = conn.cursor()
-        # execute the UPDATE  statement
         cur.execute(sql, (passaporte,restaurante,nota))
-        # get the number of updated rows
         conn.commit()
-        # Close communication with the PostgreSQL database
         cur.close()
     except (Exception, psycopg2.DatabaseError) as error:
         print("ERRO", error)

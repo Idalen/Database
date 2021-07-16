@@ -1,6 +1,6 @@
 import database as db
 
-
+"""Funcao que formata as os itens de uma impressão em uma única linha"""
 def format_line(index, words):
     ret = ''
     length = 30
@@ -12,6 +12,7 @@ def format_line(index, words):
 
     return ret
         
+"""Funcao que organiza e imprime itens de uma query"""
 def print_format_line(elements):
     words = []
     index = []
@@ -27,7 +28,7 @@ def print_format_line(elements):
     index = []
 
 
-user = None
+user = None         # user e user_name sao usadas no pseudo log in que realizamos na aplicacao
 user_name = None
 
 print("""
@@ -41,15 +42,17 @@ print("""
 """)
 
 while True:
-    func = int(input("""Qual das funcinalidades a seguir você quer executar?
+    func = int(input("""Qual das funcinalidades a seguir você quer executar?   
     1- CADASTRAR TURISTA
     2- LOGAR COM SEU PASSAPORTE
     3- AVALIAR RESTAURANTE
     4- CONSULTAR RESTAURANTES MAIS BEM AVALIADOS
     5- SAIR DO SISTEMA
-    """))
+    """)) # recebe qual funcao o usuario quer executar
     print("\n")
-    if func == 1:
+
+
+    if func == 1: #funcionalidade de cadastrar turista
     
         passaporte = input("Informe seu passaporte:")
         nome = input("Informe seu nome:")
@@ -60,7 +63,8 @@ while True:
             print(f"{nome} ({passaporte}) foi adicionado ao banco.")
         print('\n')
 
-    elif func == 2:
+    elif func == 2: # funcionalidade de um psudo login no sistema
+                    # o programa recebe o passaporte de quem está o usando e o define como atual usuario
         if user != None:
             print(f"Voce ja esta logado no sistema, {user_nome}")
         else:
@@ -77,7 +81,7 @@ while True:
 
             print(' ')
 
-    elif func == 3:
+    elif func == 3: # funcionalidade de avaliacao de restaurantes por parte do usuario
         if user == None:
             print('Você precisa está logado para avaliar restaurantes!')
         else:
@@ -99,13 +103,12 @@ while True:
             r = int(input('Escolha o restaurante que voce quer avaliar:'))
             n = int(input('Escolha sua nota para o resturante (entre 0 e 5):'))      
 
-            db.inserir_avaliacao(user,restaurante_doc[r],n) 
-
-            print(f'Voce avaliou {restaurante_doc[r]} com {n} estrelas!')  
+            if not db.inserir_avaliacao(user,restaurante_doc[r],n): 
+                print(f'Voce avaliou {restaurante_doc[r]} com {n} estrelas!')  
             print('\n')
 
 
-    elif func == 4:
+    elif func == 4: #funcionalidade para a consulta de restaurantes avaliados 
         
         pais = db.consultar_pais()
         print_format_line(pais)
@@ -134,6 +137,6 @@ while True:
                     print(f"{a[1]} --> NAO AVALIADO")
                 else:
                     print(f"{a[1]} --> NOTA: {float(a[3])} ESTRELAS")
-    elif func == 5:
+    elif func == 5: # funcionalidade para sair do sistema
         print("Saindo do sistema...\n")
         break;
