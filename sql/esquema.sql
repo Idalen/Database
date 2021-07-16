@@ -221,7 +221,7 @@ CREATE TABLE idiomas_guia(
 CREATE TABLE atracao(
 	parque NUMERIC(11, 0),
 	nome VARCHAR(30),
-	tipo VARCHAR(30),
+	tipo BOOLEAN,
 	capacidade INTEGER CHECK (capacidade > 0), -- capacidade precisa ser positiva
 	CONSTRAINT fk_parque FOREIGN KEY(parque) REFERENCES parque_tematico(documento) ON DELETE CASCADE,
 	CONSTRAINT pk_atracao PRIMARY KEY(parque, nome)

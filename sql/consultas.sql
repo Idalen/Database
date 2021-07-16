@@ -84,7 +84,7 @@ GROUP BY q.hotel;
 
 -----/ FIM 2ª CONSULTA /-----
 
-
+-- OK
 -----/ 3ª CONSULTA /-----
 --> Consulta a média das avaliações de restaurantes filtradas pelo parque especificado
 --> e pelo tipo de cozinha desejado
@@ -120,7 +120,8 @@ ORDER BY AVG(a.nota);
 -----/ 4ª CONSULTA (COM DIVISÃO)/-----
 --> Consulta os hoteis de um parque espeficiado com o filtro de 2 serviços que o turista deseja
 --> que o hotel ofereça. Note que são necessários ambos serviços.
-SELECT filtered_hoteis.nome
+
+SELECT filtered_hoteis.nome AS nome
 FROM(
     -- Seleciona todos os hoteis que possuem o servico S1.
     SELECT hoteis.nome, hoteis.documento
@@ -134,11 +135,30 @@ FROM(
     ) hoteis 
     INNER JOIN servico_hotel s
     ON hoteis.documento = s.hotel
-    WHERE s.servico='LAVANDERIA'
+    WHERE s.servico='LAVANDERIA' OR s.servico='ACADEMIA'
 ) filtered_hoteis
-INNER JOIN servico_hotel s -- Com o inner join, tem-se os hoteis com ambos serviços S1 e S2
-ON filtered_hoteis.documento = s.hotel
-WHERE s.servico='ACADEMIA';
+GROUP BY filtered_hoteis.documento, filtered_hoteis.nome
+HAVING COUNT(*) = 2;
+
+--SELECT filtered_hoteis.nome AS hoteis
+--FROM(
+--    -- Seleciona todos os hoteis que possuem o servico S1.
+--    SELECT hoteis.nome, hoteis.documento
+--    FROM (
+--        -- Seleciona todos os hoteis do parque especificado
+--        SELECT h.documento, h.nome 
+--        FROM hotel h
+--        INNER JOIN parque_tematico p
+--        ON h.parque = p.documento
+--        WHERE p.documento = 12345678911 -- 'PARQUE DIDI'
+--    ) hoteis 
+--    INNER JOIN servico_hotel s
+--    ON hoteis.documento = s.hotel
+--    WHERE s.servico='LAVANDERIA'
+--) filtered_hoteis
+--INNER JOIN servico_hotel s -- Com o inner join, tem-se os hoteis com ambos serviços S1 e S2
+--ON filtered_hoteis.documento = s.hotel
+--WHERE s.servico='ACADEMIA';
 
 -----/ FIM 4ª CONSULTA /-----
 
@@ -189,50 +209,48 @@ WHERE s.servico='ACADEMIA';
 
 -----/ FIM 5ª CONSULTA /-----
 
------/ 6ª CONSULTA
--- Consulta todas as atrações de um parque especificado
--- e divide em atrações livres e reservadas. 
--- Para as atrações reservadas, mostra as restrições presentes
---SELECT atracoes.nome
---    CASE WHEN atracoes.tipo = FALSE THEN atracoes.nome 
---    END AS atracoes_livres
---    --CASE 
---    --WHERE atracoes.tipo = true THEN atracoes.nome 
---    --END AS atracoes_reservadas
-----    atracoes.nome FILTER (WHEN atracoes.tipo = FALSE) AS atracoes_livres,
-----    atracoes.nome FILTER (WHEN atracoes.tipo = TRUE) AS atracoes_reservadas
---FROM (
---    SELECT a.nome, a.tipo, a.capacidade
---    FROM parque_tematico p
---    INNER JOIN atracao a
---        ON p.documento = a.parque
---    WHERE p.documento = 12345678910 -- PARQUE MADU
---) atracoes;
---GROUP BY atracoes.tipo, atracoes.nome;
+-- OK
+-----/ 6ª CONSULTA /-----
+--> Consulta todas as atrações de um parque especificado que não tenha uma restrição específica. 
 
+SELECT atracoes.nome AS nome_atracao, (
+    CASE WHEN atracoes.tipo=true THEN 'RESERVADA'
+    WHEN atracoes.tipo=false THEN 'LIVRE'
+    ELSE 'UNKNOWN'
+    END ) AS TIPO
+FROM (
+    SELECT a.nome, a.parque, a.tipo, a.capacidade
+    FROM parque_tematico p
+    INNER JOIN atracao a
+        ON p.documento = a.parque
+    WHERE p.documento = 12345678910 -- PARQUE MADU
+) atracoes
+WHERE atracoes.nome NOT IN (
+    SELECT r.nome_atracao
+    FROM restricoes_atracao r
+    WHERE r.restricao = 'IDADE MINIMA 13' AND atracoes.parque = r.parque_atracao
+)
+ORDER BY atracoes.tipo;
 
+-----/ FIM 6ª CONSULTA /-----
 
--- Antiga segunda consulta (eu acho que não faz sentido para o contexto)
--- Consulta todas as hospedagens dos turistas, com as informações necessárias,
--- sendo estas nome do hotel, número do quarto, número de vagas, 
--- quantas pessoas hospedadas e quanto o turista pagará. Irá ordenar pelas estadias
--- mais proximas
---SELECT 
---    t.nome AS turista, 
---    detail.hotel, 
---    detail.quarto, 
---    detail.vagas AS vagas,
---    detail.qnt AS hospedes,
---    TRUNC(detail.diaria/detail.qnt, 2) AS preço_a_pagar,
---    detail.duracao AS estadia
---FROM(
---    SELECT h.hotel, h.quarto, h.duracao, h.turista, q.vagas, q.diaria,
---    COUNT(h.turista) OVER(PARTITION BY h.hotel, h.quarto) AS qnt
---    FROM hospedagem h
---    INNER JOIN quarto q
---        ON h.hotel=q.hotel AND h.quarto = q.numero
---    ORDER BY lower(h.duracao) DESC
---) detail
---RIGHT OUTER JOIN turista t
---    ON detail.turista = t.passaporte
---ORDER BY t.nome;
+-----/ 7ª CONSULTA /-----
+--> Turista deseja uma lista com todos os eventos do passeio mais próximo de uma data
+--> especificada
+SELECT 
+    e.nome_atracao, e.ingresso AS codigo_info_ingresso, 
+    proximo.nome_grupo AS grupo, proximo.data, proximo.nome_guia AS guia, proximo.preco_guia
+FROM (
+    SELECT p.id, p.admin_grupo, p.nome_grupo, p.data, p.nome_guia, p.preco_guia
+    FROM passeio p 
+    INNER JOIN participacao part
+        ON p.admin_grupo = part.admin_grupo AND p.nome_grupo = part.nome_grupo
+    WHERE part.turista = 12345678918 AND p.data > '2021-05-21'::TIMESTAMP
+    ORDER BY p.data
+    LIMIT 1
+) proximo -- Passeio mais próximo da data definida
+INNER JOIN evento e
+    ON e.passeio = proximo.id
+;
+
+-----/ FIM 7ª CONSULTA /-----

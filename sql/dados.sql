@@ -657,6 +657,12 @@ INSERT INTO atracao
         50
     ),
     (
+        12345678911,
+        'TEATRO INFANTIL',
+        TRUE,
+        35
+    ),
+    (
         12345678913,
         'BATE-BATE',
         TRUE,
