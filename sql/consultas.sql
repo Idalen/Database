@@ -84,35 +84,34 @@ GROUP BY q.hotel;
 
 -----/ FIM 2ª CONSULTA /-----
 
--- TO DO:
--- ******* AQUI TEM Q PEGAR A CONSULTA NO database.py, pfvr faça isso daniel ******* --
+
 -----/ 3ª CONSULTA /-----
 --> Consulta a média das avaliações de restaurantes filtradas pelo parque especificado
 --> e pelo tipo de cozinha desejado
---SELECT
---    restaurante.documento,
---    restaurante.nome,
---    restaurante.tipo_cozinha,
---    AVG(a.nota)::NUMERIC(2,1)
---FROM(
---    SELECT 
---    rest_by_pais.documento, rest_by_pais.nome, rest_by_pais.parque, c.tipo_cozinha
---    FROM(
---        SELECT r.documento, p.nome AS parque, r.nome AS nome
---        FROM parque_tematico p
---        INNER JOIN restaurante r
---            ON p.documento = r.parque
---        WHERE p.pais = 'ARGENTINA'
---    )rest_by_pais INNER JOIN cozinha c
---        ON rest_by_pais.documento = c.restaurante
---    WHERE c.tipo_cozinha = 'ITALIANA'
---)restaurante LEFT OUTER JOIN avaliacao a
---    ON a.restaurante = restaurante.documento
---GROUP BY 
---    restaurante.documento,
---    restaurante.nome, 
---    restaurante.tipo_cozinha
---ORDER BY AVG(a.nota);
+SELECT
+                restaurante.documento,
+                restaurante.nome,
+                restaurante.tipo_cozinha,
+                AVG(a.nota)::NUMERIC(2,1)
+            FROM(
+                SELECT 
+                rest_by_pais.parque, rest_by_pais.documento, rest_by_pais.nome, c.tipo_cozinha
+                FROM(
+                    SELECT r.documento AS documento, p.nome AS parque, r.nome AS nome
+                    FROM parque_tematico p
+                    INNER JOIN restaurante r
+                        ON p.documento = r.parque
+                    WHERE p.documento = %s
+                )rest_by_pais INNER JOIN cozinha c
+                    ON rest_by_pais.documento = c.restaurante
+                WHERE c.tipo_cozinha = %s
+            )restaurante LEFT OUTER JOIN avaliacao a
+                ON a.restaurante = restaurante.documento
+            GROUP BY 
+                restaurante.documento,
+                restaurante.nome, 
+                restaurante.tipo_cozinha
+            ORDER BY AVG(a.nota);
 
 -----/ FIM 3ª CONSULTA /-----
 
