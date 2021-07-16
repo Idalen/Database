@@ -1,13 +1,29 @@
 import database as db
 import datetime
 
-print("""Bem vindo à aplicação!\n""")
+def format_line(index, words):
+    for i in range(len(index)):
+
+
+
+
+print("""
+ ____    ____                                                  _____      ________ 
+|    \  |       |\    /|         \          /   |   |\     |  |     \    |        | 
+|    |  |       | \  / |          \        /    |   | \    |  |      \   |        |
+|____/  |----   |  \/  |   ---     \      /     |   |  \   |  |       |  |        |
+|    \  |       |      |            \    /      |   |   \  |  |       |  |        |
+|    |  |       |      |             \  /       |   |    \ |  |      /   |        | 
+|____/  |____   |      |              \/        |   |     \|  |____ /    |________|  
+""")
 
 func = int(input("""Qual das funcinalidades a seguir você quer executar?
 1- INSERIR
 2- CONSULTAR RESTAURANTES MAIS BEM AVALIADOS
-    """))
+"""))
+print(" ")
 if func == 1:
+   
     passaporte = input("Informe seu passaporte:")
     nome = input("Informe seu nome:")
     data_nascimento = input("Informe sua data de nascimento (yyyy-mm-dd):")
@@ -15,10 +31,13 @@ if func == 1:
 
     if not db.inserir(passaporte, nome, data_nascimento, telefone):
         print(f"{nome} ({passaporte}) foi adicionado ao banco.")
+
 elif func == 2:
+    
     pais = db.consultar_pais()
     for i in range(len(pais)):
-        print(f'{i}- {pais[i]}')
+        print(f'{i}- {pais[i]}', end='')
+        
     p = int(input('Escolha o país onde seu parque se encontra: '))
 
     parque = db.consultar_parque(pais[p])

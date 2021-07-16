@@ -89,29 +89,29 @@ GROUP BY q.hotel;
 --> Consulta a média das avaliações de restaurantes filtradas pelo parque especificado
 --> e pelo tipo de cozinha desejado
 SELECT
-                restaurante.documento,
-                restaurante.nome,
-                restaurante.tipo_cozinha,
-                AVG(a.nota)::NUMERIC(2,1)
-            FROM(
-                SELECT 
-                rest_by_pais.parque, rest_by_pais.documento, rest_by_pais.nome, c.tipo_cozinha
-                FROM(
-                    SELECT r.documento AS documento, p.nome AS parque, r.nome AS nome
-                    FROM parque_tematico p
-                    INNER JOIN restaurante r
-                        ON p.documento = r.parque
-                    WHERE p.documento = %s
-                )rest_by_pais INNER JOIN cozinha c
-                    ON rest_by_pais.documento = c.restaurante
-                WHERE c.tipo_cozinha = %s
-            )restaurante LEFT OUTER JOIN avaliacao a
-                ON a.restaurante = restaurante.documento
-            GROUP BY 
-                restaurante.documento,
-                restaurante.nome, 
-                restaurante.tipo_cozinha
-            ORDER BY AVG(a.nota);
+    restaurante.documento,
+    restaurante.nome,
+    restaurante.tipo_cozinha,
+    AVG(a.nota)::NUMERIC(2,1)
+FROM(
+    SELECT 
+    rest_by_pais.parque, rest_by_pais.documento, rest_by_pais.nome, c.tipo_cozinha
+    FROM(
+        SELECT r.documento AS documento, p.nome AS parque, r.nome AS nome
+        FROM parque_tematico p
+        INNER JOIN restaurante r
+            ON p.documento = r.parque
+        WHERE p.documento = 12345678911
+    )rest_by_pais INNER JOIN cozinha c
+        ON rest_by_pais.documento = c.restaurante
+    WHERE c.tipo_cozinha = 'FRANCESA'
+)restaurante LEFT OUTER JOIN avaliacao a
+    ON a.restaurante = restaurante.documento
+GROUP BY 
+    restaurante.documento,
+    restaurante.nome, 
+    restaurante.tipo_cozinha
+ORDER BY AVG(a.nota);
 
 -----/ FIM 3ª CONSULTA /-----
 
