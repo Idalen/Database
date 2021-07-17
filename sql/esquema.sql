@@ -241,7 +241,7 @@ CREATE TABLE restricoes_atracao(
     CONSTRAINT pk_restricoes_atracao PRIMARY KEY(parque_atracao, nome_atracao, restricao)
 );
 
--- Update das vagas do hotel
+-- Update das vagas totais e quartos totais do hotel ao criar novo quarto
 CREATE FUNCTION update_hotel() RETURNS trigger AS
 $BODY$
 BEGIN
@@ -350,7 +350,7 @@ ON evento
 FOR EACH ROW
 EXECUTE PROCEDURE check_evento_consistency();
 
--- checa a capacidade do quarto
+-- checa a capacidade do quarto ao inserir hospedagem
 CREATE FUNCTION check_quarto_capacity() RETURNS trigger AS
 $BODY$
 DECLARE
@@ -373,7 +373,7 @@ ON hospedagem
 FOR EACH ROW
 EXECUTE PROCEDURE check_quarto_capacity();
 
--- Update do hotel
+-- Update dos atributos total de quartos e total de vagas do hotel quando quarto é deletado
 CREATE FUNCTION update_hotel_after_delete() RETURNS trigger AS
 $BODY$
 BEGIN
@@ -390,28 +390,6 @@ AFTER DELETE
 ON quarto
 FOR EACH ROW
 EXECUTE PROCEDURE update_hotel_after_delete();
-
--- checa se grupos de um unico turista colidem datas
--- CREATE FUNCTION check_grupo_viagem_overlap()RETURNS trigger AS
--- $BODY$
--- DECLARE
--- 	membro record;
--- BEGIN
-	
--- 	SELECT admin, nome_grupo FROM(
--- 		SELECT turistas FROM participacao p 
--- 		WHERE p.admin_grupo = NEW.admin_grupo AND p.nome_grupo = NEW.nome_grupo
--- 	) tur WHERE tur. turista
-
--- END
--- $BODY$
--- LANGUAGE plpgsql;
-
--- CREATE TRIGGER grupo_viagem_overlap
--- BEFORE INSERT
--- ON viagem
--- FOR EACH ROW
--- EXECUTE PROCEDURE check_grupo_viagem_overlap();
 
 -- Checa se passeio acontece no mesmo pais que a viagem leva
 CREATE FUNCTION check_passeio_same_pais_as_viagem() RETURNS trigger AS
@@ -441,9 +419,3 @@ ON passeio
 FOR EACH ROW
 EXECUTE PROCEDURE check_passeio_same_pais_as_viagem();
 
-
--- hospedagem deve ocorrer dentro do intervalo de tempo da viagem
-
--- hotel da hospedagem deve ser o mesmo que o da viagem 
-
--- quando hospedagem termina, vaga é liberada
